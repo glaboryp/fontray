@@ -4,11 +4,7 @@
   </AppLayout>
 </template>
 
-<script>
-export default {
-  name: "Results",
-};
-</script>
+<script setup></script>
 
 <style scoped>
 h1 {
