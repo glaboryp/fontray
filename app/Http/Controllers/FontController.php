@@ -8,7 +8,7 @@ use Inertia\Inertia;
 class FontController extends Controller {
 
     public function index() {
-        return Inertia::render('Home');
+        return Inertia::render('HomePage');
     }
 
     public function identify(Request $request) {
