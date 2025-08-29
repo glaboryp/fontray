@@ -10,8 +10,8 @@
       :class="[
         'border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200',
         isDragging 
-          ? 'border-indigo-500 bg-indigo-50' 
-          : 'border-gray-300 hover:border-indigo-400 hover:bg-gray-50'
+          ? 'border-primary-500 bg-primary-50' 
+          : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
       ]"
     >
       <div v-if="!selectedImage" class="space-y-4">
@@ -34,7 +34,7 @@
           <!-- Upload Button -->
           <button
             @click="triggerFileInput"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+            class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-6 rounded-lg transition-colors"
           >
             Seleccionar imagen
           </button>
