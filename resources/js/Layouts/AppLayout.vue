@@ -19,16 +19,16 @@
           <nav class="hidden md:flex space-x-8">
             <Link
               href="/"
-              class="text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
               :class="{
-                'text-primary-500 bg-primary-50': $page.component === 'Home',
+                'text-primary bg-primary-light': $page.component === 'HomePage',
               }"
             >
               Inicio
             </Link>
             <Link
               href="/about"
-              class="text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Acerca de
             </Link>
@@ -37,7 +37,7 @@
           <!-- Mobile menu button -->
           <div class="md:hidden">
             <button
-              class="text-gray-700 hover:text-primary-500 focus:outline-none focus:text-primary-500"
+              class="text-gray-700 hover:text-primary focus:outline-none focus:text-primary cursor-pointer"
               @click="mobileMenuOpen = !mobileMenuOpen"
             >
               <svg
@@ -72,16 +72,16 @@
           >
             <Link
               href="/"
-              class="block text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-base font-medium"
+              class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium"
               :class="{
-                'text-primary-500 bg-primary-50': $page.component === 'Home',
+                'text-primary bg-primary-light': $page.component === 'HomePage',
               }"
             >
               Inicio
             </Link>
             <Link
               href="/about"
-              class="block text-gray-700 hover:text-primary-500 px-3 py-2 rounded-md text-base font-medium"
+              class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium"
             >
               Acerca de
             </Link>
@@ -104,24 +104,52 @@
             <span class="text-lg font-semibold text-gray-900">Fontray</span>
           </div>
 
-          <div
-            class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6"
-          >
-            <Link
-              href="/privacy"
-              class="text-sm text-gray-600 hover:text-primary-500 transition-colors"
+          <div class="flex flex-col items-center space-y-3">
+            <div
+              class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6"
             >
-              Política de Privacidad
-            </Link>
-            <Link
-              href="/terms"
-              class="text-sm text-gray-600 hover:text-primary-500 transition-colors"
-            >
-              Términos de Servicio
-            </Link>
-            <span class="text-sm text-gray-500">
-              © {{ currentYear }} Fontray. Todos los derechos reservados.
-            </span>
+              <Link
+                href="/privacy"
+                class="text-sm text-gray-600 hover:text-primary transition-colors"
+              >
+                Política de Privacidad
+              </Link>
+              <Link
+                href="/terms"
+                class="text-sm text-gray-600 hover:text-primary transition-colors"
+              >
+                Términos de Servicio
+              </Link>
+              <span class="text-sm text-gray-500">
+                © {{ currentYear }} Fontray. Todos los derechos reservados.
+              </span>
+            </div>
+
+            <!-- Powered by WhatFontIs -->
+            <div class="flex items-center space-x-1 text-xs text-gray-500">
+              <span>Powered by</span>
+              <a
+                href="https://www.whatfontis.com/API-identify-fonts-from-image.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:text-primary-dark transition-colors font-medium"
+              >
+                WhatFontIs
+              </a>
+              <svg
+                class="w-3 h-3 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +162,7 @@
     >
       <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
         <div
-          class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"
+          class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"
         />
         <span class="text-gray-700">Cargando...</span>
       </div>

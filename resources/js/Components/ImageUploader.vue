@@ -5,8 +5,8 @@
       :class="[
         'border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200',
         isDragging
-          ? 'border-primary-500 bg-primary-50'
-          : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50',
+          ? 'border-primary bg-primary-light'
+          : 'border-gray-300 hover:border-primary-hover hover:bg-gray-50',
       ]"
       @drop="handleDrop"
       @dragover.prevent
@@ -37,7 +37,7 @@
 
           <!-- Upload Button -->
           <button
-            class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+            class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-6 rounded-lg transition-colors cursor-pointer"
             @click="triggerFileInput"
           >
             Seleccionar imagen
@@ -60,7 +60,7 @@
 
           <!-- Remove button -->
           <button
-            class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
+            class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors cursor-pointer"
             @click="removeImage"
           >
             <svg
@@ -91,7 +91,7 @@
               'font-medium py-3 px-8 rounded-lg transition-all',
               isProcessing
                 ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700 text-white hover:shadow-lg',
+                : 'bg-green-600 hover:bg-green-700 text-white hover:shadow-lg cursor-pointer',
             ]"
             @click="identifyFont"
           >

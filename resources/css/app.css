@@ -1,14 +1,9 @@
 @import 'tailwindcss';
 
+/* Tailwind CSS v4 - Using @theme directive for custom colors */
 @theme {
-  --color-primary-50: #e6f7ff;
-  --color-primary-100: #b3ebff;
-  --color-primary-200: #80dfff;
-  --color-primary-300: #4dd3ff;
-  --color-primary-400: #1ac7ff;
-  --color-primary-500: #00a9e0;
-  --color-primary-600: #0088b8;
-  --color-primary-700: #006690;
-  --color-primary-800: #004468;
-  --color-primary-900: #002240;
+  --color-primary-light: #e8f2ff;
+  --color-primary: #147dd9;
+  --color-primary-dark: #0f5ba3;
+  --color-primary-hover: #2a8be6;
 }

@@ -1,12 +1,12 @@
 <template>
   <AppLayout>
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-50 via-white to-cyan-50">
+    <section class="bg-gradient-to-br from-primary-light via-white to-cyan-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div class="text-center">
           <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             Identifica cualquier
-            <span class="text-primary-500">fuente</span>
+            <span class="text-primary">fuente</span>
             al instante
           </h1>
           <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -17,7 +17,7 @@
           <!-- CTA Button -->
           <div class="mb-12">
             <button
-              class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg hover:shadow-xl"
+              class="bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg hover:shadow-xl cursor-pointer"
               @click="scrollToUploader"
             >
               Comenzar ahora
@@ -41,10 +41,10 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div class="text-center">
               <div
-                class="bg-primary-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
+                class="bg-primary-light rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
               >
                 <svg
-                  class="w-8 h-8 text-primary-500"
+                  class="w-8 h-8 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -68,10 +68,10 @@
 
             <div class="text-center">
               <div
-                class="bg-primary-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
+                class="bg-primary-light rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
               >
                 <svg
-                  class="w-8 h-8 text-primary-500"
+                  class="w-8 h-8 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -94,10 +94,10 @@
 
             <div class="text-center">
               <div
-                class="bg-primary-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
+                class="bg-primary-light rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4"
               >
                 <svg
-                  class="w-8 h-8 text-primary-500"
+                  class="w-8 h-8 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -153,7 +153,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div class="text-center">
             <div
-              class="bg-primary-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-6 text-xl font-bold"
+              class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-6 text-xl font-bold"
             >
               1
             </div>
@@ -168,7 +168,7 @@
 
           <div class="text-center">
             <div
-              class="bg-primary-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-6 text-xl font-bold"
+              class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-6 text-xl font-bold"
             >
               2
             </div>
@@ -183,7 +183,7 @@
 
           <div class="text-center">
             <div
-              class="bg-primary-500 text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-6 text-xl font-bold"
+              class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-6 text-xl font-bold"
             >
               3
             </div>
