@@ -68,7 +68,7 @@
           class="flex flex-col sm:flex-row justify-between items-center mb-8"
         >
           <button
-            class="mb-4 sm:mb-0 flex items-center text-primary hover:text-primary-dark transition-colors"
+            class="mb-4 sm:mb-0 flex items-center text-primary hover:text-primary-dark transition-colors cursor-pointer"
             @click="goBack"
           >
             <svg
@@ -181,7 +181,7 @@
         <!-- Back to Top Button -->
         <div class="text-center mt-12">
           <button
-            class="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md"
+            class="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md cursor-pointer"
             @click="scrollToTop"
           >
             Volver arriba

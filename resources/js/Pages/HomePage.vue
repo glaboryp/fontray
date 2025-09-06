@@ -6,7 +6,6 @@
     <!-- Upload Section -->
     <UploadSection
       ref="uploaderElement"
-      @image-uploaded="handleImageUpload"
       @font-identified="handleFontIdentification"
     />
 
@@ -38,16 +37,7 @@ const scrollToUploader = () => {
   }
 }
 
-const handleImageUpload = imageData => {
-  console.log('Imagen subida:', imageData)
-  // Aquí irá la lógica para procesar la imagen
-  // Por ahora solo logeamos los datos
-}
-
 const handleFontIdentification = fontData => {
-  console.log('Fuentes identificadas:', fontData)
-
-  // Navegar a la página de resultados con los datos de las fuentes como query parameters
   const queryString = new window.URLSearchParams({
     fonts: JSON.stringify(fontData.fonts || []),
     total: fontData.total_found || 0,

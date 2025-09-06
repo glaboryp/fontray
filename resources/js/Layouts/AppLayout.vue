@@ -35,6 +35,12 @@
               class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6"
             >
               <Link
+                href="/examples"
+                class="text-sm text-gray-600 hover:text-primary transition-colors"
+              >
+                Ejemplos y Guía
+              </Link>
+              <Link
                 href="/privacy"
                 class="text-sm text-gray-600 hover:text-primary transition-colors"
               >

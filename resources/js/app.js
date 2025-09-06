@@ -8,8 +8,6 @@ createInertiaApp({
     const page = pages[`./Pages/${name}.vue`]
 
     if (!page) {
-      console.error(`Page not found: ./Pages/${name}.vue`)
-      console.log('Available pages:', Object.keys(pages))
       throw new Error(`Page not found: ${name}`)
     }
 

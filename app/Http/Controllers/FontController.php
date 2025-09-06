@@ -35,15 +35,40 @@ class FontController extends Controller {
             ]);
 
             if (!$response->successful()) {
+                $errorMessage = $response->body();
+                
                 Log::error('WhatFontIs API Error', [
                     'status' => $response->status(),
-                    'response' => $response->body()
+                    'response' => $errorMessage
                 ]);
                 
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al procesar la imagen. Por favor, inténtalo de nuevo.'
-                ], 500);
+                // Manejar errores específicos de la API
+                if (strpos($errorMessage, 'too large') !== false) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña o de menor resolución.'
+                    ], 400);
+                } elseif (strpos($errorMessage, 'No text box detected') !== false) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se detectó texto en la imagen. Asegúrate de que la imagen contenga texto claro y legible.'
+                    ], 400);
+                } elseif (strpos($errorMessage, 'No characters detected') !== false || strpos($errorMessage, 'No Characters Found') !== false || strpos($errorMessage, 'No chars found') !== false) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se detectaron caracteres legibles en la imagen. Esta herramienta funciona mejor con texto normal en lugar de logotipos muy estilizados. Intenta con una imagen que contenga texto más convencional.'
+                    ], 400);
+                } elseif (strpos($errorMessage, 'API rate limit exceeded') !== false) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Se ha alcanzado el límite de consultas diarias. Por favor, inténtalo mañana.'
+                    ], 429);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Error al procesar la imagen. Por favor, inténtalo de nuevo con una imagen diferente.'
+                    ], 500);
+                }
             }
 
             $data = $response->json();

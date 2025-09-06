@@ -12,6 +12,11 @@ Route::get('/results', function () {
     return Inertia::render('ResultsPage');
 })->name('results');
 
+// Examples page
+Route::get('/examples', function () {
+    return Inertia::render('ExamplesPage');
+})->name('examples');
+
 // Static pages
 Route::get('/privacy', function () {
     return Inertia::render('PrivacyPage');
