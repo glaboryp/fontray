@@ -4,7 +4,11 @@
     <HeroSection @scroll-to-uploader="scrollToUploader" />
 
     <!-- Upload Section -->
-    <UploadSection ref="uploaderElement" @image-uploaded="handleImageUpload" />
+    <UploadSection
+      ref="uploaderElement"
+      @image-uploaded="handleImageUpload"
+      @font-identified="handleFontIdentification"
+    />
 
     <!-- How it works Section -->
     <HowItWorksSection />
@@ -20,6 +24,7 @@ import HeroSection from '@/Components/HeroSection.vue'
 import UploadSection from '@/Components/UploadSection.vue'
 import HowItWorksSection from '@/Components/HowItWorksSection.vue'
 import FaqSection from '@/Components/FaqSection.vue'
+import { router } from '@inertiajs/vue3'
 
 import { ref } from 'vue'
 
@@ -37,6 +42,19 @@ const handleImageUpload = imageData => {
   console.log('Imagen subida:', imageData)
   // Aquí irá la lógica para procesar la imagen
   // Por ahora solo logeamos los datos
+}
+
+const handleFontIdentification = fontData => {
+  console.log('Fuentes identificadas:', fontData)
+
+  // Navegar a la página de resultados con los datos de las fuentes como query parameters
+  const queryString = new window.URLSearchParams({
+    fonts: JSON.stringify(fontData.fonts || []),
+    total: fontData.total_found || 0,
+    success: fontData.success || false,
+  }).toString()
+
+  router.visit(`/results?${queryString}`)
 }
 </script>
 

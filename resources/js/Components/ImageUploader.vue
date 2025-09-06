@@ -183,7 +183,7 @@
 import { ref, defineEmits } from 'vue'
 
 // Emits
-const emit = defineEmits(['uploaded'])
+const emit = defineEmits(['uploaded', 'font-identified'])
 
 // Reactive data
 const isDragging = ref(false)
@@ -263,26 +263,44 @@ const identifyFont = async () => {
 
   isProcessing.value = true
   error.value = ''
+  success.value = ''
 
   try {
-    // Create FormData for the API call
     const formData = new FormData()
     formData.append('image', selectedImage.value)
 
-    // Emit the uploaded event with the file data
-    emit('uploaded', {
-      file: selectedImage.value,
-      formData: formData,
-      preview: previewUrl.value,
+    const response = await fetch('/identify', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRF-TOKEN': document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute('content'),
+      },
     })
 
-    // For now, simulate processing
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const data = await response.json()
 
-    success.value = '¡Imagen procesada! Redirigiendo a los resultados...'
+    if (data.success) {
+      success.value = `¡${data.total_found} fuente(s) identificada(s)! Redirigiendo a los resultados...`
+
+      // Emitir los resultados al componente padre
+      emit('font-identified', {
+        fonts: data.fonts,
+        totalFound: data.total_found,
+      })
+
+      // Simular redirección a página de resultados (implementar más tarde)
+      setTimeout(() => {
+        // TODO: Implementar navegación a página de resultados
+        console.log('Resultados:', data.fonts)
+      }, 1500)
+    } else {
+      error.value = data.message || 'Error al procesar la imagen'
+    }
   } catch (err) {
     error.value =
-      'Hubo un error al procesar la imagen. Por favor, inténtalo de nuevo.'
+      'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.'
     console.error('Error identifying font:', err)
   } finally {
     isProcessing.value = false

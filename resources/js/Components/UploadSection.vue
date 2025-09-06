@@ -11,7 +11,10 @@
       </div>
 
       <!-- Image Uploader Component -->
-      <ImageUploader @uploaded="$emit('imageUploaded', $event)" />
+      <ImageUploader
+        @uploaded="$emit('imageUploaded', $event)"
+        @font-identified="$emit('fontIdentified', $event)"
+      />
     </div>
   </section>
 </template>
@@ -20,5 +23,5 @@
 import ImageUploader from './ImageUploader.vue'
 
 // Emits
-defineEmits(['imageUploaded'])
+defineEmits(['imageUploaded', 'fontIdentified'])
 </script>

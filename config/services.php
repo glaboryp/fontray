@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'whatfontis' => [
+        'api_key' => env('WHATFONTIS_API_KEY'),
+    ],
+
 ];

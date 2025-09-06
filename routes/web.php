@@ -7,6 +7,11 @@ use Inertia\Inertia;
 Route::get('/', [FontController::class, 'index'])->name('home');
 Route::post('/identify', [FontController::class, 'identify'])->name('identify');
 
+// Results page
+Route::get('/results', function () {
+    return Inertia::render('ResultsPage');
+})->name('results');
+
 // Static pages
 Route::get('/privacy', function () {
     return Inertia::render('PrivacyPage');
