@@ -35,13 +35,54 @@
             Arrastra y suelta una imagen aquí, o haz clic para seleccionar
           </p>
 
-          <!-- Upload Button -->
-          <button
-            class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-6 rounded-lg transition-colors cursor-pointer"
-            @click="triggerFileInput"
-          >
-            Seleccionar imagen
-          </button>
+          <!-- Upload Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-6 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
+              @click="triggerFileInput"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4"
+                />
+              </svg>
+              Seleccionar imagen
+            </button>
+
+            <button
+              class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
+              @click="openCamera"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              Tomar foto
+            </button>
+          </div>
 
           <p class="text-sm text-gray-500 mt-3">
             Soporta JPG, PNG, WebP hasta 10MB
@@ -141,6 +182,159 @@
       class="hidden"
       @change="handleFileSelect"
     />
+
+    <!-- Camera Modal -->
+    <div
+      v-if="showCamera"
+      class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-hidden"
+      >
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900">Capturar foto</h3>
+            <button
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+              @click="closeCamera"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <p class="text-sm text-gray-600 mt-1">
+            Posiciona el texto que quieres identificar en el visor y toma la
+            foto
+          </p>
+        </div>
+
+        <!-- Camera Content -->
+        <div class="p-6">
+          <div
+            class="relative bg-gray-100 rounded-lg overflow-hidden"
+            style="aspect-ratio: 4/3"
+          >
+            <!-- Video Stream -->
+            <video
+              ref="videoRef"
+              class="w-full h-full object-cover"
+              autoplay
+              playsinline
+              :style="{ display: cameraReady ? 'block' : 'none' }"
+            />
+
+            <!-- Camera Loading -->
+            <div
+              v-if="!cameraReady"
+              class="absolute inset-0 flex items-center justify-center text-gray-500"
+            >
+              <div class="text-center">
+                <svg
+                  class="w-8 h-8 mx-auto mb-2 animate-spin"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                <p>Iniciando cámara...</p>
+              </div>
+            </div>
+
+            <!-- Camera Error -->
+            <div
+              v-if="cameraError"
+              class="absolute inset-0 flex items-center justify-center text-red-500"
+            >
+              <div class="text-center">
+                <svg
+                  class="w-8 h-8 mx-auto mb-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p class="text-sm">Error al acceder a la cámara</p>
+                <p class="text-xs mt-1">{{ cameraError }}</p>
+              </div>
+            </div>
+
+            <!-- Capture overlay -->
+            <div
+              v-if="cameraReady"
+              class="absolute inset-0 border-2 border-dashed border-white border-opacity-50 m-4 rounded-lg pointer-events-none"
+            />
+          </div>
+
+          <!-- Camera Controls -->
+          <div class="flex justify-center gap-4 mt-6">
+            <button
+              class="px-4 py-2 text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+              @click="closeCamera"
+            >
+              Cancelar
+            </button>
+            <button
+              :disabled="!cameraReady"
+              :class="[
+                'px-6 py-2 rounded-lg font-medium transition-colors',
+                cameraReady
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+              ]"
+              @click="capturePhoto"
+            >
+              <svg
+                class="w-5 h-5 inline mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              Capturar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden canvas for photo capture -->
+      <canvas ref="canvasRef" class="hidden" />
+    </div>
 
     <!-- Error message -->
     <div
@@ -392,7 +586,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ImageCropper from './ImageCropper.vue'
 
@@ -408,6 +602,14 @@ const error = ref('')
 const success = ref('')
 const fileInput = ref(null)
 const showCropper = ref(false)
+
+// Camera related
+const showCamera = ref(false)
+const cameraReady = ref(false)
+const cameraError = ref('')
+const videoRef = ref(null)
+const canvasRef = ref(null)
+const currentStream = ref(null)
 
 // Methods
 const triggerFileInput = () => {
@@ -606,6 +808,98 @@ const handleCropApplied = async croppedBlob => {
   } catch {
     error.value = 'Error al aplicar el recorte. Inténtalo de nuevo.'
   }
+}
+
+// Camera methods
+const openCamera = async () => {
+  showCamera.value = true
+  cameraReady.value = false
+  cameraError.value = ''
+
+  try {
+    // Request camera access
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: 'environment', // Prefiere cámara trasera en móviles
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+    })
+
+    currentStream.value = stream
+
+    // Assign stream to video element
+    if (videoRef.value) {
+      videoRef.value.srcObject = stream
+      videoRef.value.onloadedmetadata = () => {
+        cameraReady.value = true
+      }
+    }
+  } catch (error) {
+    console.error('Error accessing camera:', error)
+    cameraError.value = 'No se pudo acceder a la cámara. Verifica los permisos.'
+  }
+}
+
+const closeCamera = () => {
+  // Stop camera stream
+  if (currentStream.value) {
+    currentStream.value.getTracks().forEach(track => track.stop())
+    currentStream.value = null
+  }
+
+  showCamera.value = false
+  cameraReady.value = false
+  cameraError.value = ''
+}
+
+const capturePhoto = () => {
+  if (!videoRef.value || !canvasRef.value || !cameraReady.value) {
+    return
+  }
+
+  const video = videoRef.value
+  const canvas = canvasRef.value
+  const context = canvas.getContext('2d')
+
+  // Set canvas dimensions to match video
+  canvas.width = video.videoWidth
+  canvas.height = video.videoHeight
+
+  // Draw video frame to canvas
+  context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+  // Convert canvas to blob
+  canvas.toBlob(
+    blob => {
+      if (blob) {
+        // Create a file from the blob
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+        const capturedFile = new File(
+          [blob],
+          `camera-capture-${timestamp}.jpg`,
+          {
+            type: 'image/jpeg',
+            lastModified: Date.now(),
+          }
+        )
+
+        // Process the captured photo as if it was uploaded
+        processFile(capturedFile)
+
+        // Close camera
+        closeCamera()
+
+        // Show success message
+        success.value =
+          'Foto capturada correctamente. ¡Ahora puedes identificar la fuente!'
+      } else {
+        error.value = 'Error al capturar la foto. Inténtalo de nuevo.'
+      }
+    },
+    'image/jpeg',
+    0.8
+  )
 }
 
 const formatFileSize = bytes => {
