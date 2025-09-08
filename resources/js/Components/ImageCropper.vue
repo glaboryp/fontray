@@ -3,10 +3,10 @@
     class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
   >
     <div
-      class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden"
+      class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden"
     >
       <!-- Header -->
-      <div class="px-6 py-4 border-b border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200 flex-shrink-0">
         <div class="flex justify-between items-center">
           <h3 class="text-lg font-semibold text-gray-900">Recortar imagen</h3>
           <button
@@ -34,10 +34,10 @@
       </div>
 
       <!-- Cropper Area -->
-      <div class="p-6">
+      <div class="p-6 flex-1 overflow-y-auto">
         <div
           class="relative bg-gray-100 rounded-lg group"
-          style="min-height: 400px"
+          style="min-height: 300px"
         >
           <!-- Indicador visual cuando no hay selección activa -->
           <div
@@ -89,23 +89,23 @@
       </div>
 
       <!-- Controls -->
-      <div class="px-6 py-4 border-t border-gray-200">
+      <div class="px-6 py-4 border-t border-gray-200 flex-shrink-0">
         <div class="flex flex-col sm:flex-row justify-end items-center gap-4">
           <!-- Action Buttons -->
           <button
-            class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors cursor-pointer"
+            class="w-full sm:w-auto px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors cursor-pointer"
             @click="resetCrop"
           >
             Restablecer
           </button>
           <button
-            class="px-4 py-2 text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors cursor-pointer"
+            class="w-full sm:w-auto px-4 py-2 text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg font-medium transition-colors cursor-pointer"
             @click="$emit('cancelled')"
           >
             Cancelar
           </button>
           <button
-            class="px-6 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg font-medium transition-colors cursor-pointer"
+            class="w-full sm:w-auto px-6 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg font-medium transition-colors cursor-pointer"
             :disabled="!canCrop"
             @click="applyCrop"
           >
