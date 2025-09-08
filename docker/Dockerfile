@@ -12,7 +12,7 @@ WORKDIR /var/www/html
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV SUPERVISOR_PHP_COMMAND="/usr/bin/php8.3 /var/www/html/artisan serve --host=0.0.0.0 --port=${PORT:-80}"
-ENV SUPERVISOR_PHP_USER="sail"
+ENV SUPERVISOR_PHP_USER="root"
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
