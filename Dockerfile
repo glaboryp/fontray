@@ -9,8 +9,6 @@ WORKDIR /var/www/html
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y gnupg curl ca-certificates zip unzip git libpng-dev \
     && curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xb8dc7e53946656efbce4c1dd71daeaab4ad4cab6' | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
@@ -28,17 +26,17 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copia los archivos de la aplicación
 COPY . /var/www/html/
-RUN ls -la /var/www/html
 
-# Instala dependencias y establece permisos
+RUN groupadd -g 1337 www-data && useradd -u 1337 -g www-data -ms /bin/bash www-data \
+    && chown -R www-data:www-data /var/www/html
+
+USER www-data
+
 RUN composer install --no-interaction --optimize-autoloader --no-dev \
     && npm install \
-    && npm run build \
-    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && npm run build
 
 EXPOSE 10000
 
-CMD ["/usr/bin/php8.3", "/var/www/html/artisan", "serve", "--host=0.0.0.0", "--port=10000"]
+CMD ["/usr/bin/php8.3", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
