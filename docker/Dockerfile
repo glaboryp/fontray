@@ -29,7 +29,7 @@ RUN apt-get update && apt-get upgrade -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copia los archivos de la aplicación
-COPY . /var/www/html/
+COPY .. /var/www/html/
 
 # Instala dependencias y establece permisos
 RUN composer install --no-interaction --optimize-autoloader --no-dev \
