@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('cache', function (Blueprint $table) {
             $table->string('key');
-            //$table->mediumText('value');
-            //$table->integer('expiration');
+            $table->mediumText('value');
+            $table->integer('expiration');
         });
 
         /*Schema::create('cache_locks', function (Blueprint $table) {
