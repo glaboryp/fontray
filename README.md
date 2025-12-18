@@ -40,38 +40,45 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 ### Instalación
 
 1. **Clona el repositorio**:
+
    ```bash
    git clone https://github.com/tu-usuario/fontray.git
    cd fontray
    ```
 
 2. **Configura las variables de entorno**:
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Edita el archivo `.env` y añade tu API key:
+
    ```
    WHATFONTIS_API_KEY=tu_clave_de_api_aqui
    ```
 
 3. **Inicia el entorno con Sail**:
+
    ```bash
    ./vendor/bin/sail up -d
    ```
 
 4. **Instala las dependencias**:
+
    ```bash
    ./vendor/bin/sail composer install
    ./vendor/bin/sail npm install
    ```
 
 5. **Ejecuta las migraciones**:
+
    ```bash
    ./vendor/bin/sail artisan migrate
    ```
 
 6. **Compila los assets**:
+
    ```bash
    ./vendor/bin/sail npm run dev
    ```
@@ -175,21 +182,24 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 ## 📋 Roadmap
 
 ### 🎯 MVP (Fase 1)
+
 - [x] Configuración del entorno con Laravel Sail
 - [x] Configuración de PostgreSQL
 - [x] Migraciones básicas
-- [ ] Controlador para identificación de fuentes
-- [ ] Componentes Vue.js para upload y recorte
-- [ ] Integración con WhatFontIs API
-- [ ] Página de resultados
+- [x] Controlador para identificación de fuentes
+- [x] Componentes Vue.js para upload y recorte
+- [x] Integración con WhatFontIs API
+- [x] Página de resultados
 
 ### 🚀 Post-Lanzamiento (Fase 2)
-- [ ] Despliegue en Render.com
+
+- [x] Despliegue en Render.com
 - [ ] Analíticas con Google Analytics
 - [ ] Sistema de feedback
 - [ ] Monitorización de errores
 
 ### 🌟 Futuro (Fase 3)
+
 - [ ] Sistema de cuentas de usuario
 - [ ] Historial de búsquedas
 - [ ] Acceso a cámara en móviles
