@@ -1,0 +1,17 @@
+import { defineConfig } from 'vitest/config'
+import vue from '@vitejs/plugin-vue'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [vue()],
+  test: {
+    environment: 'happy-dom',
+    include: ['resources/js/**/*.test.js'],
+    setupFiles: ['resources/js/__tests__/setup.js'],
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(import.meta.dirname, 'resources/js'),
+    },
+  },
+})
