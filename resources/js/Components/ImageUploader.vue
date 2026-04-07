@@ -102,7 +102,7 @@
           <!-- Remove button -->
           <button
             class="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors cursor-pointer"
-            @click="removeImage"
+            @click="removeSelectedImage"
           >
             <svg
               class="w-4 h-4"
@@ -589,17 +589,30 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ImageCropper from './ImageCropper.vue'
+import { useImageUpload } from '@/composables/useImageUpload'
+import { useFontIdentification } from '@/composables/useFontIdentification'
 
 // Emits
 const emit = defineEmits(['uploaded', 'font-identified'])
 
-// Reactive data
-const isDragging = ref(false)
-const selectedImage = ref(null)
-const previewUrl = ref('')
-const isProcessing = ref(false)
-const error = ref('')
-const success = ref('')
+// Composables
+const {
+  isDragging,
+  selectedImage,
+  previewUrl,
+  error,
+  success,
+  processFile,
+  removeImage,
+  handleDrop,
+  handleFileSelect,
+  formatFileSize,
+  resizeImageIfNeeded,
+} = useImageUpload()
+
+const { isProcessing, identifyFont: identifyFontCore } = useFontIdentification()
+
+// Refs
 const fileInput = ref(null)
 const showCropper = ref(false)
 
@@ -613,172 +626,31 @@ const currentStream = ref(null)
 
 // Methods
 const triggerFileInput = () => {
-  fileInput.value.click()
-}
-
-const handleFileSelect = event => {
-  const file = event.target.files[0]
-  if (file) {
-    processFile(file)
-  }
-}
-
-const handleDrop = event => {
-  event.preventDefault()
-  isDragging.value = false
-
-  const files = event.dataTransfer.files
-  if (files.length > 0) {
-    processFile(files[0])
-  }
-}
-
-const processFile = file => {
-  // Reset messages
-  error.value = ''
-  success.value = ''
-
-  // Validate file type
-  if (!file.type.startsWith('image/')) {
-    error.value = 'Por favor selecciona un archivo de imagen válido.'
-    return
-  }
-
-  // Validate file size (10MB max)
-  if (file.size > 10 * 1024 * 1024) {
-    error.value = 'El archivo es demasiado grande. El tamaño máximo es 10MB.'
-    return
-  }
-
-  selectedImage.value = file
-
-  // Create preview URL
-  const reader = new FileReader()
-  reader.onload = e => {
-    previewUrl.value = e.target.result
-  }
-  reader.readAsDataURL(file)
-
-  // Mostrar mensaje apropiado según el tamaño
-  if (file.size > 2 * 1024 * 1024) {
-    // 2MB
-    success.value =
-      'Imagen cargada correctamente. Nota: La imagen es grande y será redimensionada automáticamente para optimizar el proceso de identificación.'
-  } else {
-    success.value =
-      'Imagen cargada correctamente. ¡Haz clic en "Identificar fuente" para continuar!'
-  }
-}
-
-const removeImage = () => {
-  selectedImage.value = null
-  previewUrl.value = ''
-  error.value = ''
-  success.value = ''
-
-  // Reset file input
-  if (fileInput.value) {
-    fileInput.value.value = ''
-  }
-}
-
-// Función para redimensionar imagen si es necesario
-const resizeImageIfNeeded = (
-  file,
-  maxWidth = 1200,
-  maxHeight = 1200,
-  quality = 0.8
-) => {
-  return new Promise(resolve => {
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const img = new Image()
-
-    img.onload = () => {
-      let { width, height } = img
-
-      // Calcular nuevas dimensiones manteniendo la proporción
-      if (width > maxWidth || height > maxHeight) {
-        const ratio = Math.min(maxWidth / width, maxHeight / height)
-        width *= ratio
-        height *= ratio
-      }
-
-      // Configurar canvas
-      canvas.width = width
-      canvas.height = height
-
-      // Dibujar imagen redimensionada
-      ctx.drawImage(img, 0, 0, width, height)
-
-      // Convertir a blob
-      canvas.toBlob(
-        blob => {
-          // Crear un nuevo File con el mismo nombre pero redimensionado
-          const resizedFile = new File([blob], file.name, {
-            type: file.type,
-            lastModified: Date.now(),
-          })
-          resolve(resizedFile)
-        },
-        file.type,
-        quality
-      )
-    }
-
-    img.onerror = () => {
-      // Si hay error, devolver archivo original
-      resolve(file)
-    }
-
-    // Cargar la imagen
-    img.src = URL.createObjectURL(file)
-  })
+  fileInput.value?.click()
 }
 
 const identifyFont = async () => {
   if (!selectedImage.value) return
 
-  isProcessing.value = true
   error.value = ''
   success.value = ''
 
-  try {
-    // Redimensionar imagen si es necesario para evitar errores de tamaño
-    const processedImage = await resizeImageIfNeeded(selectedImage.value)
+  const result = await identifyFontCore(
+    selectedImage.value,
+    resizeImageIfNeeded,
+    emit
+  )
 
-    const formData = new FormData()
-    formData.append('image', processedImage)
-
-    const response = await fetch('/identify', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'X-CSRF-TOKEN': document
-          .querySelector('meta[name="csrf-token"]')
-          .getAttribute('content'),
-      },
-    })
-
-    const data = await response.json()
-
-    if (data.success) {
-      success.value = `¡${data.total_found} fuente(s) identificada(s)! Redirigiendo a los resultados...`
-
-      // Emitir los resultados al componente padre
-      emit('font-identified', {
-        fonts: data.fonts,
-        totalFound: data.total_found,
-      })
-    } else {
-      error.value = data.message || 'Error al procesar la imagen'
-    }
-  } catch {
-    error.value =
-      'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.'
-  } finally {
-    isProcessing.value = false
+  if (result?.success) {
+    success.value = `¡${result.data.total_found} fuente(s) identificada(s)! Redirigiendo a los resultados...`
+  } else if (result?.message) {
+    error.value = result.message
   }
+}
+
+const removeSelectedImage = () => {
+  removeImage()
+  if (fileInput.value) fileInput.value.value = ''
 }
 
 const openCropper = () => {
@@ -789,20 +661,15 @@ const openCropper = () => {
 
 const handleCropApplied = async croppedBlob => {
   try {
-    // Crear un nuevo archivo con la imagen recortada
     const croppedFile = new File([croppedBlob], selectedImage.value.name, {
       type: selectedImage.value.type,
       lastModified: Date.now(),
     })
 
-    // Actualizar la imagen seleccionada y la vista previa
     selectedImage.value = croppedFile
     previewUrl.value = URL.createObjectURL(croppedBlob)
-
-    // Cerrar el cropper
     showCropper.value = false
 
-    // Mostrar mensaje de éxito
     success.value =
       'Imagen recortada correctamente. ¡Ahora puedes identificar la fuente!'
   } catch {
@@ -817,10 +684,9 @@ const openCamera = async () => {
   cameraError.value = ''
 
   try {
-    // Request camera access
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: 'environment', // Prefiere cámara trasera en móviles
+        facingMode: 'environment',
         width: { ideal: 1280 },
         height: { ideal: 720 },
       },
@@ -828,21 +694,18 @@ const openCamera = async () => {
 
     currentStream.value = stream
 
-    // Assign stream to video element
     if (videoRef.value) {
       videoRef.value.srcObject = stream
       videoRef.value.onloadedmetadata = () => {
         cameraReady.value = true
       }
     }
-  } catch (error) {
-    console.error('Error accessing camera:', error)
+  } catch {
     cameraError.value = 'No se pudo acceder a la cámara. Verifica los permisos.'
   }
 }
 
 const closeCamera = () => {
-  // Stop camera stream
   if (currentStream.value) {
     currentStream.value.getTracks().forEach(track => track.stop())
     currentStream.value = null
@@ -862,18 +725,14 @@ const capturePhoto = () => {
   const canvas = canvasRef.value
   const context = canvas.getContext('2d')
 
-  // Set canvas dimensions to match video
   canvas.width = video.videoWidth
   canvas.height = video.videoHeight
 
-  // Draw video frame to canvas
   context.drawImage(video, 0, 0, canvas.width, canvas.height)
 
-  // Convert canvas to blob
   canvas.toBlob(
     blob => {
       if (blob) {
-        // Create a file from the blob
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
         const capturedFile = new File(
           [blob],
@@ -884,13 +743,9 @@ const capturePhoto = () => {
           }
         )
 
-        // Process the captured photo as if it was uploaded
         processFile(capturedFile)
-
-        // Close camera
         closeCamera()
 
-        // Show success message
         success.value =
           'Foto capturada correctamente. ¡Ahora puedes identificar la fuente!'
       } else {
@@ -900,16 +755,6 @@ const capturePhoto = () => {
     'image/jpeg',
     0.8
   )
-}
-
-const formatFileSize = bytes => {
-  if (bytes === 0) return '0 Bytes'
-
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
 const goToExamples = () => {

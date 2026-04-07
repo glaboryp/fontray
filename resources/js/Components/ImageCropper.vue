@@ -139,7 +139,7 @@ const hasCropSelection = ref(false)
 // Methods
 const onCropChange = () => {
   // Se ejecuta cuando cambia el área de recorte
-  const result = cropper.value?.getResult()
+  const result = cropper.value?.getResult?.()
   canCrop.value = result ? true : false
 
   // Detectar si hay una selección válida para mostrar/ocultar el indicador
@@ -157,7 +157,7 @@ const resetCrop = () => {
 }
 
 const applyCrop = () => {
-  const result = cropper.value?.getResult()
+  const result = cropper.value?.getResult?.()
 
   if (
     result &&
