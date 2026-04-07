@@ -168,16 +168,62 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 
 ### 🧪 Testing
 
+Fontray ahora tiene 3 capas de tests:
+
+1. **Backend (PHPUnit / Laravel)**
+2. **Frontend unit/component (Vitest + Vue Test Utils)**
+3. **E2E (Playwright)**
+
+#### Opción A — Ejecutar tests en local (sin Sail)
+
 ```bash
-# Ejecutar todos los tests
-./vendor/bin/sail test
+# Backend (Laravel/PHPUnit)
+php artisan test
 
-# Tests específicos
-./vendor/bin/sail test --filter=NombreDelTest
+# Frontend unit/component
+npm run test
+# o en watch mode
+npm run test:watch
 
-# Tests con cobertura
-./vendor/bin/sail test --coverage
+# E2E
+npm run test:e2e
 ```
+
+#### Opción B — Ejecutar tests con Sail
+
+```bash
+# Backend
+./vendor/bin/sail artisan test
+
+# Frontend unit/component
+./vendor/bin/sail npm run test
+
+# E2E
+./vendor/bin/sail npm run test:e2e
+```
+
+#### Comandos útiles de filtrado
+
+```bash
+# Solo un test PHP
+php artisan test --filter=FontIdentificationServiceTest
+
+# Solo un archivo de Vitest
+npx vitest run resources/js/Pages/__tests__/ResultsPage.test.js
+
+# Solo un archivo E2E
+npx playwright test e2e/font-identification.spec.js
+```
+
+#### Nota sobre entorno para E2E
+
+Los tests E2E están configurados para levantar Laravel en modo testing y evitar dependencias externas:
+
+- `APP_ENV=testing`
+- `WHATFONTIS_MOCK=true`
+- `DB_CONNECTION=sqlite`
+
+Esto evita llamadas reales a WhatFontIs y hace los tests reproducibles.
 
 ## 📋 Roadmap
 
