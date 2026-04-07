@@ -23,4 +23,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 /.sisyphustest-results/
+test-results/
 playwright-report/
+/.sisyphus

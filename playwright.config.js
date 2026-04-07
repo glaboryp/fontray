@@ -7,6 +7,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:8000',
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {
@@ -15,9 +16,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'php artisan serve --port=8000',
+    command: 'APP_ENV=testing WHATFONTIS_MOCK=true DB_CONNECTION=sqlite DB_DATABASE=/home/glabory/p/fontray/database/database.sqlite SESSION_DRIVER=file CACHE_STORE=file QUEUE_CONNECTION=sync php artisan serve --port=8000',
     url: 'http://localhost:8000',
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     timeout: 30000,
   },
 })
