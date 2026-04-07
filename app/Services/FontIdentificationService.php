@@ -10,6 +10,10 @@ class FontIdentificationService
 {
     public function identify(UploadedFile $image): array
     {
+        if (config('services.whatfontis.mock')) {
+            return $this->mockResponse();
+        }
+
         try {
             $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
 
@@ -101,5 +105,20 @@ class FontIdentificationService
                 'status' => 500,
             ];
         }
+    }
+
+    private function mockResponse(): array
+    {
+        $fonts = collect([
+            ['name' => 'Roboto Regular', 'similarity' => 100, 'link' => 'https://www.whatfontis.com/Roboto-Regular.font', 'preview' => 'https://www.whatfontis.com/preview/Roboto-Regular.png', 'category' => 'Sin categoría', 'foundry' => null],
+            ['name' => 'Open Sans', 'similarity' => 100, 'link' => 'https://www.whatfontis.com/Open-Sans.font', 'preview' => 'https://www.whatfontis.com/preview/Open-Sans.png', 'category' => 'Sin categoría', 'foundry' => null],
+            ['name' => 'Lato', 'similarity' => 100, 'link' => 'https://www.whatfontis.com/Lato.font', 'preview' => 'https://www.whatfontis.com/preview/Lato.png', 'category' => 'Sin categoría', 'foundry' => null],
+        ]);
+
+        return [
+            'success' => true,
+            'fonts' => $fonts,
+            'total_found' => count($fonts),
+        ];
     }
 }

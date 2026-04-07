@@ -37,6 +37,7 @@ return [
 
     'whatfontis' => [
         'api_key' => env('WHATFONTIS_API_KEY'),
+        'mock' => env('WHATFONTIS_MOCK', false),
     ],
 
 ];
