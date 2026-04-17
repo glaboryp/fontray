@@ -672,7 +672,7 @@ const handleCropApplied = async croppedBlob => {
 
     success.value =
       'Imagen recortada correctamente. ¡Ahora puedes identificar la fuente!'
-  } catch {
+  } catch (e) {
     error.value = 'Error al aplicar el recorte. Inténtalo de nuevo.'
   }
 }
