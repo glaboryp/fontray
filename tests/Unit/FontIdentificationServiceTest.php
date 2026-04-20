@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Services\FontIdentificationService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class FontIdentificationServiceTest extends TestCase
 {
@@ -54,7 +54,7 @@ class FontIdentificationServiceTest extends TestCase
                 && $request['IMAGEBASE64'] === '1'
                 && $request['NOTTEXTBOXSDETECTION'] === '0'
                 && $request['limit'] === '20'
-                && !empty($request['urlimagebase64']);
+                && ! empty($request['urlimagebase64']);
         });
     }
 
@@ -139,7 +139,21 @@ class FontIdentificationServiceTest extends TestCase
 
         $this->assertFalse($result['success']);
         $this->assertEquals(429, $result['status']);
-        $this->assertStringContainsString('límite de consultas', $result['message']);
+        $this->assertStringContainsString('límite de solicitudes', $result['message']);
+    }
+
+    public function test_identify_returns_friendly_rate_limit_message_for_429_without_known_provider_text(): void
+    {
+        Http::fake([
+            'https://www.whatfontis.com/*' => Http::response('Too Many Requests', 429),
+        ]);
+
+        $result = $this->makeService()->identify($this->fakeImage());
+
+        $this->assertFalse($result['success']);
+        $this->assertEquals(429, $result['status']);
+        $this->assertStringContainsString('límite de solicitudes', $result['message']);
+        $this->assertStringNotContainsString('Too Many Requests', $result['message']);
     }
 
     public function test_identify_returns_error_on_generic_api_failure(): void

@@ -29,14 +29,15 @@
           </button>
         </div>
         <p class="text-sm text-gray-600 mt-1">
-          Arrastra las esquinas para ajustar el área de recorte
+          Ajusta el área de recorte, rota y mejora el contraste para obtener un
+          texto claro.
         </p>
       </div>
 
       <!-- Cropper Area -->
       <div class="p-6 flex-1 overflow-y-auto">
         <div
-          class="relative bg-gray-100 rounded-lg group"
+          class="relative bg-gray-100 rounded-lg group mb-4"
           style="min-height: 300px"
         >
           <!-- Indicador visual cuando no hay selección activa -->
@@ -55,11 +56,13 @@
             ref="cropper"
             class="cropper"
             :src="imageSrc"
+            :default-size="defaultSize"
             :stencil-props="{
               aspectRatio: null,
               movable: true,
               resizable: true,
             }"
+            :style="{ '--custom-contrast': contrast + '%' }"
             @change="onCropChange"
           />
 
@@ -86,9 +89,59 @@
             </div>
           </div>
         </div>
+
+        <!-- Controls Panel -->
+        <div
+          class="bg-gray-50 rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 border border-gray-200"
+        >
+          <!-- Rotate -->
+          <div class="flex flex-col space-y-2">
+            <span class="text-sm font-medium text-gray-700">Orientación</span>
+            <button
+              class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-center transition-colors shadow-sm"
+              @click="rotateImage"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Rotar 90°
+            </button>
+          </div>
+
+          <!-- Contrast -->
+          <div class="flex flex-col space-y-2">
+            <div class="flex justify-between">
+              <span class="text-sm font-medium text-gray-700">Contraste</span>
+              <span class="text-sm font-medium text-blue-600">
+                {{ contrast }}%
+              </span>
+            </div>
+            <input
+              v-model="contrast"
+              type="range"
+              min="50"
+              max="200"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+            />
+            <div class="flex justify-between text-xs text-gray-500">
+              <span>Bajo</span>
+              <span>Alto</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Controls -->
+      <!-- Footer Controls -->
       <div class="px-6 py-4 border-t border-gray-200 flex-shrink-0">
         <div class="flex flex-col sm:flex-row justify-end items-center gap-4">
           <!-- Action Buttons -->
@@ -136,13 +189,21 @@ const cropper = ref(null)
 const canCrop = ref(true)
 const hasCropSelection = ref(false)
 
+const rotation = ref(0)
+const contrast = ref(100)
+
+const defaultSize = ({ imageSize }) => {
+  return {
+    width: imageSize.width || 100,
+    height: imageSize.height || 100,
+  }
+}
+
 // Methods
 const onCropChange = () => {
-  // Se ejecuta cuando cambia el área de recorte
   const result = cropper.value?.getResult?.()
-  canCrop.value = result ? true : false
+  canCrop.value = result && result.canvas && result.canvas.width > 0
 
-  // Detectar si hay una selección válida para mostrar/ocultar el indicador
   hasCropSelection.value =
     result &&
     result.coordinates &&
@@ -153,6 +214,15 @@ const onCropChange = () => {
 const resetCrop = () => {
   if (cropper.value) {
     cropper.value.reset()
+    rotation.value = 0
+    contrast.value = 100
+  }
+}
+
+const rotateImage = () => {
+  if (cropper.value) {
+    cropper.value.rotate(90)
+    rotation.value = (rotation.value + 90) % 360
   }
 }
 
@@ -165,20 +235,34 @@ const applyCrop = () => {
     result.canvas.width > 0 &&
     result.canvas.height > 0
   ) {
-    result.canvas.toBlob(
-      blob => {
-        if (blob) {
-          emit('crop-applied', blob)
-        } else {
-          // Fallback: cerrar modal sin recortar
-          emit('cancelled')
-        }
-      },
-      'image/jpeg',
-      0.9
-    )
+    try {
+      let finalCanvas = result.canvas
+
+      if (Number(contrast.value) !== 100) {
+        finalCanvas = document.createElement('canvas')
+        finalCanvas.width = result.canvas.width
+        finalCanvas.height = result.canvas.height
+        const ctx = finalCanvas.getContext('2d')
+
+        ctx.filter = `contrast(${contrast.value}%)`
+        ctx.drawImage(result.canvas, 0, 0)
+      }
+
+      finalCanvas.toBlob(
+        blob => {
+          if (blob) {
+            emit('crop-applied', blob)
+          } else {
+            emit('cancelled')
+          }
+        },
+        'image/jpeg',
+        0.9
+      )
+    } catch {
+      emit('cancelled')
+    }
   } else {
-    // Fallback: cerrar modal sin recortar
     emit('cancelled')
   }
 }
@@ -192,7 +276,6 @@ const applyCrop = () => {
   width: 100%;
 }
 
-/* Personalizar estilos del cropper */
 :deep(.vue-advanced-cropper) {
   border-radius: 8px;
   cursor: crosshair;
@@ -206,6 +289,8 @@ const applyCrop = () => {
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;
+  /* Aplicar contraste visualmente en el editor */
+  filter: contrast(var(--custom-contrast, 100%));
 }
 
 :deep(.vue-advanced-cropper__foreground) {
