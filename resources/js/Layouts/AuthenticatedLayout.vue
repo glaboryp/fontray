@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import DropdownLink from '@/Components/DropdownLink.vue'
@@ -7,6 +7,7 @@ import NavLink from '@/Components/NavLink.vue'
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 import { Link } from '@inertiajs/vue3'
 
+const route = inject('route')
 const showingNavigationDropdown = ref(false)
 </script>
 
@@ -36,6 +37,12 @@ const showingNavigationDropdown = ref(false)
                   :active="route().current('dashboard')"
                 >
                   Dashboard
+                </NavLink>
+                <NavLink
+                  :href="route('history')"
+                  :active="route().current('history')"
+                >
+                  History
                 </NavLink>
               </div>
             </div>
@@ -74,7 +81,7 @@ const showingNavigationDropdown = ref(false)
                       method="post"
                       as="button"
                     >
-                      Log Out
+                      Cerrar sesión
                     </DropdownLink>
                   </template>
                 </Dropdown>
@@ -84,8 +91,8 @@ const showingNavigationDropdown = ref(false)
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
               <button
-                @click="showingNavigationDropdown = !showingNavigationDropdown"
                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-gray-400 dark:focus:bg-gray-900 dark:focus:text-gray-400"
+                @click="showingNavigationDropdown = !showingNavigationDropdown"
               >
                 <svg
                   class="h-6 w-6"
@@ -134,6 +141,12 @@ const showingNavigationDropdown = ref(false)
             >
               Dashboard
             </ResponsiveNavLink>
+            <ResponsiveNavLink
+              :href="route('history')"
+              :active="route().current('history')"
+            >
+              History
+            </ResponsiveNavLink>
           </div>
 
           <!-- Responsive Settings Options -->
@@ -155,7 +168,7 @@ const showingNavigationDropdown = ref(false)
                 method="post"
                 as="button"
               >
-                Log Out
+                Cerrar sesión
               </ResponsiveNavLink>
             </div>
           </div>
@@ -163,7 +176,7 @@ const showingNavigationDropdown = ref(false)
       </nav>
 
       <!-- Page Heading -->
-      <header class="bg-white shadow dark:bg-gray-800" v-if="$slots.header">
+      <header v-if="$slots.header" class="bg-white shadow dark:bg-gray-800">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <slot name="header" />
         </div>

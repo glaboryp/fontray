@@ -27,4 +27,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/history', [FontController::class, 'history'])
+    ->middleware(['auth'])
+    ->name('history');
+
 require __DIR__.'/auth.php';
