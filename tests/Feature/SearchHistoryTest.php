@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -148,7 +149,9 @@ class SearchHistoryTest extends TestCase
             ->where('histories.data.0.image_reference', 'history-raw-name.png')
             ->where('histories.data.0.image_url', null)
             ->where('histories.data.1.image_reference', 'images/history-safe.png')
-            ->where('histories.data.1.image_url', asset('storage/images/history-safe.png'))
+            ->where('histories.data.1.image_url', fn ($url) => is_string($url)
+                && Str::contains($url, '/history/')
+                && Str::endsWith($url, '/image'))
         );
     }
 
@@ -171,7 +174,54 @@ class SearchHistoryTest extends TestCase
             ->component('HistoryDashboard')
             ->has('histories.data', 1)
             ->where('histories.data.0.image_reference', 'images/history/stored-entry.png')
-            ->where('histories.data.0.image_url', asset('storage/images/history/stored-entry.png'))
+            ->where('histories.data.0.image_url', fn ($url) => is_string($url)
+                && Str::contains($url, '/history/')
+                && Str::endsWith($url, '/image'))
         );
+    }
+
+    public function test_history_image_route_denies_access_to_other_user_history_image(): void
+    {
+        Storage::fake('public');
+
+        $owner = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $path = UploadedFile::fake()->create('private-history.png', 100, 'image/png')
+            ->store('images/history', 'public');
+
+        $historyId = DB::table('search_histories')->insertGetId([
+            'user_id' => $owner->id,
+            'image_reference' => $path,
+            'font_results' => json_encode(['success' => true, 'total_found' => 1], JSON_THROW_ON_ERROR),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->actingAs($otherUser)->get(route('history.image', ['history' => $historyId]));
+
+        $response->assertForbidden();
+    }
+
+    public function test_history_image_route_serves_owned_history_image(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $path = UploadedFile::fake()->create('owned-history.png', 100, 'image/png')
+            ->store('images/history', 'public');
+
+        $historyId = DB::table('search_histories')->insertGetId([
+            'user_id' => $user->id,
+            'image_reference' => $path,
+            'font_results' => json_encode(['success' => true, 'total_found' => 1], JSON_THROW_ON_ERROR),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)->get(route('history.image', ['history' => $historyId]));
+
+        $response->assertOk();
     }
 }

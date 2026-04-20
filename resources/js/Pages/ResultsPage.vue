@@ -101,21 +101,19 @@
         </div>
 
         <!-- Fonts Grid -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <div
             v-for="(font, index) in sortedFonts"
             :key="index"
             class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden"
           >
             <!-- Font Preview Image -->
-            <div class="aspect-w-16 aspect-h-9 bg-gray-100">
+            <div class="aspect-w-16 aspect-h-9 bg-white">
               <img
                 v-if="font.preview"
                 :src="font.preview"
                 :alt="font.name"
-                class="w-full h-48 object-cover"
+                class="w-full h-48 object-contain"
                 @error="handleImageError"
               />
               <div

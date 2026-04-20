@@ -9,6 +9,7 @@ use App\Services\PdfFirstPageImageExtractor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -78,7 +79,7 @@ class FontController extends Controller
             ->through(fn (SearchHistory $history) => [
                 'id' => $history->id,
                 'image_reference' => $history->image_reference,
-                'image_url' => $this->resolveHistoryImageUrl($history->image_reference),
+                'image_url' => $this->resolveHistoryImageUrl($history),
                 'font_results' => $history->font_results,
                 'created_at' => $history->created_at,
             ]);
@@ -88,8 +89,33 @@ class FontController extends Controller
         ]);
     }
 
-    private function resolveHistoryImageUrl(?string $imageReference): ?string
+    public function showHistoryImage(Request $request, SearchHistory $history)
     {
+        if ((int) $history->user_id !== (int) $request->user()->id) {
+            abort(403);
+        }
+
+        $imageReference = $history->image_reference;
+
+        if (! is_string($imageReference) || $imageReference === '') {
+            abort(404);
+        }
+
+        if (! Str::startsWith($imageReference, ['images/', 'uploads/'])) {
+            abort(404);
+        }
+
+        if (! Storage::disk('public')->exists($imageReference)) {
+            abort(404);
+        }
+
+        return response()->file(Storage::disk('public')->path($imageReference));
+    }
+
+    private function resolveHistoryImageUrl(SearchHistory $history): ?string
+    {
+        $imageReference = $history->image_reference;
+
         if (! is_string($imageReference) || $imageReference === '') {
             return null;
         }
@@ -99,7 +125,7 @@ class FontController extends Controller
         }
 
         if (Str::startsWith($imageReference, ['images/', 'uploads/'])) {
-            return asset('storage/'.$imageReference);
+            return route('history.image', ['history' => $history->id]);
         }
 
         return null;

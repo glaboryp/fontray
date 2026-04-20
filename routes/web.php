@@ -31,4 +31,8 @@ Route::get('/history', [FontController::class, 'history'])
     ->middleware(['auth'])
     ->name('history');
 
+Route::get('/history/{history}/image', [FontController::class, 'showHistoryImage'])
+    ->middleware(['auth'])
+    ->name('history.image');
+
 require __DIR__.'/auth.php';

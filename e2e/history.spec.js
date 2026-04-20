@@ -87,7 +87,7 @@ test('authenticated user sees search history after identification', async ({
 
   if (imageCount > 0) {
     const firstImageSrc = await images.first().getAttribute('src')
-    expect(firstImageSrc).toMatch(/\/storage\/images\/history\//)
+    expect(firstImageSrc).toMatch(/\/history\/\d+\/image/)
   } else {
     await expect(page.getByText('Sin imagen').first()).toBeVisible()
   }

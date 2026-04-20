@@ -82,13 +82,13 @@ const openHistoryResult = item => {
               @keyup.enter="openHistoryResult(item)"
             >
               <div
-                class="h-48 w-full bg-gray-100 flex items-center justify-center overflow-hidden"
+                class="h-48 w-full bg-gray-50 flex items-center justify-center overflow-hidden p-4 border-b border-gray-100"
               >
                 <img
                   v-if="item.image_url"
                   :src="item.image_url"
                   alt="Imagen de búsqueda"
-                  class="object-cover w-full h-full"
+                  class="object-contain w-full h-full"
                 />
                 <span v-else class="text-gray-400">Sin imagen</span>
               </div>
