@@ -127,10 +127,10 @@
               </span>
             </div>
             <input
+              v-model="contrast"
               type="range"
               min="50"
               max="200"
-              v-model="contrast"
               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
             />
             <div class="flex justify-between text-xs text-gray-500">
@@ -259,7 +259,7 @@ const applyCrop = () => {
         'image/jpeg',
         0.9
       )
-    } catch (e) {
+    } catch {
       emit('cancelled')
     }
   } else {

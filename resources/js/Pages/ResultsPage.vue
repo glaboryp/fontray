@@ -228,11 +228,24 @@ const loadResults = () => {
   try {
     // Obtener datos de los query parameters de la URL
     const urlParams = new window.URLSearchParams(window.location.search)
+    const errorParam = urlParams.get('error')
     const fontsParam = urlParams.get('fonts')
+
+    if (errorParam) {
+      hasError.value = true
+      errorMessage.value = decodeURIComponent(errorParam)
+      isLoading.value = false
+      return
+    }
 
     if (fontsParam) {
       const parsedFonts = JSON.parse(decodeURIComponent(fontsParam))
       fonts.value = parsedFonts || []
+    } else if (window.history?.state?.fonts) {
+      const historyStateFonts = window.history.state.fonts
+      fonts.value = Array.isArray(historyStateFonts)
+        ? historyStateFonts
+        : JSON.parse(historyStateFonts)
     } else if (page.props.fonts) {
       // Fallback: usar props de Inertia si están disponibles
       fonts.value = page.props.fonts

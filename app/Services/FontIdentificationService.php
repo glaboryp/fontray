@@ -23,40 +23,41 @@ class FontIdentificationService
                 'NOTTEXTBOXSDETECTION' => '0',
                 'urlimage' => '',
                 'urlimagebase64' => $imageBase64,
-                'limit' => '20'
+                'limit' => '20',
             ]);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 $errorMessage = $response->body();
+                $statusCode = $response->status();
 
                 Log::error('WhatFontIs API Error', [
-                    'status' => $response->status(),
-                    'response' => $errorMessage
+                    'status' => $statusCode,
+                    'response' => $errorMessage,
                 ]);
 
-                if (strpos($errorMessage, 'too large') !== false) {
+                if ($statusCode === 429 || stripos($errorMessage, 'rate limit') !== false) {
+                    return [
+                        'success' => false,
+                        'message' => 'Has alcanzado temporalmente el límite de solicitudes. Por favor, inténtalo más tarde.',
+                        'status' => 429,
+                    ];
+                } elseif (stripos($errorMessage, 'too large') !== false) {
                     return [
                         'success' => false,
                         'message' => 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña o de menor resolución.',
                         'status' => 400,
                     ];
-                } elseif (strpos($errorMessage, 'No text box detected') !== false) {
+                } elseif (stripos($errorMessage, 'No text box detected') !== false) {
                     return [
                         'success' => false,
                         'message' => 'No se detectó texto en la imagen. Asegúrate de que la imagen contenga texto claro y legible.',
                         'status' => 400,
                     ];
-                } elseif (strpos($errorMessage, 'No characters detected') !== false || strpos($errorMessage, 'No Characters Found') !== false || strpos($errorMessage, 'No chars found') !== false) {
+                } elseif (stripos($errorMessage, 'No characters detected') !== false || stripos($errorMessage, 'No Characters Found') !== false || stripos($errorMessage, 'No chars found') !== false) {
                     return [
                         'success' => false,
                         'message' => 'No se detectaron caracteres legibles en la imagen. Esta herramienta funciona mejor con texto normal en lugar de logotipos muy estilizados. Intenta con una imagen que contenga texto más convencional.',
                         'status' => 400,
-                    ];
-                } elseif (strpos($errorMessage, 'API rate limit exceeded') !== false) {
-                    return [
-                        'success' => false,
-                        'message' => 'Se ha alcanzado el límite de consultas diarias. Por favor, inténtalo mañana.',
-                        'status' => 429,
                     ];
                 } else {
                     return [
@@ -69,7 +70,7 @@ class FontIdentificationService
 
             $data = $response->json();
 
-            if (empty($data) || !is_array($data)) {
+            if (empty($data) || ! is_array($data)) {
                 return [
                     'success' => false,
                     'message' => 'No se pudieron identificar fuentes en esta imagen. Asegúrate de que el texto sea claro y legible.',
@@ -83,7 +84,7 @@ class FontIdentificationService
                     'link' => $font['url'] ?? null,
                     'preview' => $font['image'] ?? null,
                     'category' => 'Sin categoría',
-                    'foundry' => null
+                    'foundry' => null,
                 ];
             })->values();
 
@@ -96,7 +97,7 @@ class FontIdentificationService
         } catch (\Exception $e) {
             Log::error('Font identification error', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return [
