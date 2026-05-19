@@ -11,6 +11,7 @@
           <h3 class="text-lg font-semibold text-gray-900">Recortar imagen</h3>
           <button
             class="text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Cerrar"
             @click="$emit('cancelled')"
           >
             <svg
@@ -18,6 +19,7 @@
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -77,6 +79,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -106,6 +109,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"

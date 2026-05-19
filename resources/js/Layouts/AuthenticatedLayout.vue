@@ -55,7 +55,7 @@ const showingNavigationDropdown = ref(false)
                     <span class="inline-flex rounded-md">
                       <button
                         type="button"
-                        class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
+                        class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
                       >
                         {{ $page.props.auth.user.name }}
 
@@ -64,6 +64,7 @@ const showingNavigationDropdown = ref(false)
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
                           fill="currentColor"
+                          aria-hidden="true"
                         >
                           <path
                             fill-rule="evenodd"
@@ -91,7 +92,9 @@ const showingNavigationDropdown = ref(false)
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
               <button
-                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-gray-400 dark:focus:bg-gray-900 dark:focus:text-gray-400"
+                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-gray-400 dark:focus:bg-gray-900 dark:focus:text-gray-400"
+                :aria-expanded="showingNavigationDropdown"
+                aria-label="Abrir menú de navegación"
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
               >
                 <svg
@@ -99,6 +102,7 @@ const showingNavigationDropdown = ref(false)
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     :class="{
