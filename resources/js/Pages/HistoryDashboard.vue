@@ -57,7 +57,12 @@ const openHistoryResult = item => {
 </script>
 
 <template>
-  <Head title="Historial de búsquedas" />
+  <Head title="Historial de búsquedas">
+    <meta
+      name="description"
+      content="Consulta el historial de tus búsquedas de fuentes tipográficas en Fontray. Accede de nuevo a los resultados de análisis anteriores."
+    />
+  </Head>
 
   <AppLayout>
     <div class="py-12 bg-gray-50 min-h-full">
@@ -87,8 +92,9 @@ const openHistoryResult = item => {
                 <img
                   v-if="item.image_url"
                   :src="item.image_url"
-                  alt="Imagen de búsqueda"
+                  :alt="`Imagen de la búsqueda del ${formatDate(item.created_at)}`"
                   class="object-contain w-full h-full"
+                  loading="lazy"
                 />
                 <span v-else class="text-gray-400">Sin imagen</span>
               </div>

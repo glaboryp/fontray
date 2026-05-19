@@ -6,7 +6,7 @@ use App\Http\Requests\IdentifyFontRequest;
 use App\Models\SearchHistory;
 use App\Services\FontIdentificationService;
 use App\Services\PdfFirstPageImageExtractor;
-use Illuminate\Http\JsonResponse;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -25,7 +25,7 @@ class FontController extends Controller
         return Inertia::render('HomePage');
     }
 
-    public function identify(IdentifyFontRequest $request): JsonResponse
+    public function identify(IdentifyFontRequest $request)
     {
         $uploadedFile = $request->file('image');
         $file = $uploadedFile;
@@ -34,10 +34,12 @@ class FontController extends Controller
             try {
                 $file = $this->pdfFirstPageImageExtractor->extract($file);
             } catch (\Throwable) {
-                return response()->json([
+                return to_route('results')->with('fontResults', [
                     'success' => false,
-                    'message' => 'No se pudo procesar el PDF. Verifica que el archivo sea válido e inténtalo nuevamente.',
-                ], 400);
+                    'fonts' => [],
+                    'total_found' => 0,
+                    'error' => 'No se pudo procesar el PDF. Verifica que el archivo sea válido e inténtalo nuevamente.',
+                ]);
             }
         }
 
@@ -64,10 +66,12 @@ class FontController extends Controller
             ]);
         }
 
-        $status = $result['status'] ?? ($result['success'] ? 200 : 200);
-        unset($result['status']);
-
-        return response()->json($result, $status);
+        return to_route('results')->with('fontResults', [
+            'success' => $result['success'] ?? false,
+            'fonts' => collect($result['fonts'] ?? [])->values()->toArray(),
+            'total_found' => $result['total_found'] ?? 0,
+            'error' => $result['message'] ?? null,
+        ]);
     }
 
     public function history(Request $request)

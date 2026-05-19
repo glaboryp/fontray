@@ -2,6 +2,8 @@
   <div class="max-w-2xl mx-auto">
     <!-- Upload Area -->
     <div
+      role="region"
+      aria-label="Área de carga de imágenes. Arrastra una imagen aquí o usa los botones para seleccionar o capturar"
       :class="[
         'border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200',
         isDragging
@@ -17,7 +19,7 @@
       <div v-if="!selectedImage" class="space-y-4">
         <!-- Upload Icon -->
         <div class="mx-auto w-16 h-16 text-gray-400">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -46,6 +48,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -66,6 +69,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -102,6 +106,7 @@
           <!-- Remove button -->
           <button
             class="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors cursor-pointer"
+            aria-label="Eliminar imagen seleccionada"
             @click="removeSelectedImage"
           >
             <svg
@@ -109,6 +114,7 @@
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -153,6 +159,7 @@
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     stroke-linecap="round"
@@ -197,6 +204,7 @@
             <h3 class="text-lg font-semibold text-gray-900">Capturar foto</h3>
             <button
               class="text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Cerrar cámara"
               @click="closeCamera"
             >
               <svg
@@ -204,6 +212,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -246,6 +255,7 @@
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     stroke-linecap="round"
@@ -269,6 +279,7 @@
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     stroke-linecap="round"
@@ -312,6 +323,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -357,6 +369,7 @@
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -377,6 +390,7 @@
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -518,6 +532,7 @@
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -593,7 +608,7 @@ import { useImageUpload } from '@/composables/useImageUpload'
 import { useFontIdentification } from '@/composables/useFontIdentification'
 
 // Emits
-const emit = defineEmits(['uploaded', 'font-identified'])
+const emit = defineEmits(['uploaded'])
 
 // Composables
 const {
@@ -635,17 +650,7 @@ const identifyFont = async () => {
   error.value = ''
   success.value = ''
 
-  const result = await identifyFontCore(
-    selectedImage.value,
-    resizeImageIfNeeded,
-    emit
-  )
-
-  if (result?.success) {
-    success.value = `¡${result.data.total_found} fuente(s) identificada(s)! Redirigiendo a los resultados...`
-  } else if (result?.message) {
-    error.value = result.message
-  }
+  await identifyFontCore(selectedImage.value, resizeImageIfNeeded)
 }
 
 const removeSelectedImage = () => {

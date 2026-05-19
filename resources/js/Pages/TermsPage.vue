@@ -1,4 +1,11 @@
 <template>
+  <Head title="Términos de Servicio">
+    <meta
+      name="description"
+      content="Términos y condiciones de uso de Fontray. Lee nuestras normas sobre el uso del servicio de identificación de fuentes tipográficas."
+    />
+  </Head>
+
   <AppLayout>
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Header -->
@@ -7,7 +14,7 @@
           Términos de Servicio
         </h1>
         <p class="text-lg text-gray-600">
-          Última actualización: {{ currentDate }}
+          Última actualización: 19 de mayo de 2026
         </p>
       </div>
 
@@ -42,18 +49,22 @@
           </p>
           <ul class="list-disc ml-6 text-gray-700 mb-4">
             <li>
-              Se utilizan
-              <strong>exclusivamente</strong>
-              para el análisis de identificación de fuentes
+              Se utilizan <strong>exclusivamente</strong> para el análisis
+              de identificación de fuentes.
             </li>
             <li>
-              <strong>No se almacenan permanentemente</strong>
-              en nuestros servidores
+              <strong>Sin cuenta (usuario anónimo):</strong>
+              se procesan temporalmente y se eliminan al finalizar el análisis.
             </li>
-            <li>Se eliminan automáticamente después del procesamiento</li>
+            <li>
+              <strong>Con cuenta y sesión iniciada:</strong>
+              se almacenan en nuestros servidores vinculadas a su historial de
+              búsquedas y permanecen disponibles hasta que se eliminen
+              manualmente o se cierre la cuenta.
+            </li>
             <li>
               Pueden ser procesadas por servicios de terceros (como WhatFontIs)
-              para proporcionar los resultados
+              para proporcionar los resultados.
             </li>
           </ul>
         </section>
@@ -118,9 +129,10 @@
           <p class="text-gray-700 mb-4">
             Usted conserva todos los derechos sobre las imágenes que suba.
             Fontray no reclama ningún derecho de propiedad sobre su contenido.
-            Al subir una imagen, nos otorga una licencia temporal limitada para
-            procesarla únicamente con el fin de proporcionar el servicio de
-            identificación.
+            Al subir una imagen, nos otorga una licencia limitada para
+            procesarla con el fin de proporcionar el servicio de identificación.
+            Para usuarios con cuenta, esta licencia se extiende al
+            almacenamiento necesario para habilitar el historial de búsquedas.
           </p>
         </section>
 
@@ -206,17 +218,7 @@
 
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { Link } from '@inertiajs/vue3'
-import { computed } from 'vue'
-
-// Computed properties
-const currentDate = computed(() => {
-  return new Date().toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-})
+import { Head, Link } from '@inertiajs/vue3'
 </script>
 
 <style scoped>

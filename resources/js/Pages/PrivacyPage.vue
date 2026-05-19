@@ -1,4 +1,11 @@
 <template>
+  <Head title="Política de Privacidad">
+    <meta
+      name="description"
+      content="Política de privacidad de Fontray. Conoce cómo recopilamos, utilizamos y protegemos tu información personal y las imágenes que subes al servicio."
+    />
+  </Head>
+
   <AppLayout>
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Header -->
@@ -7,7 +14,7 @@
           Política de Privacidad
         </h1>
         <p class="text-lg text-gray-600">
-          Última actualización: {{ currentDate }}
+          Última actualización: 19 de mayo de 2026
         </p>
       </div>
 
@@ -27,19 +34,22 @@
           </h3>
           <p class="text-gray-700 mb-4">
             Las imágenes que sube a nuestro servicio se utilizan
-            <strong>
-              únicamente para el análisis de identificación de fuentes
-            </strong>
-            . Estas imágenes:
+            <strong>únicamente para el análisis de identificación de fuentes</strong>.
+            El comportamiento varía según si tiene cuenta registrada:
           </p>
           <ul class="list-disc ml-6 text-gray-700 mb-4">
-            <li>Se procesan temporalmente en nuestros servidores</li>
             <li>
-              <strong>No se almacenan de forma permanente</strong>
-              en nuestros sistemas
+              <strong>Sin cuenta (usuario anónimo):</strong>
+              la imagen se procesa temporalmente y se elimina de nuestros
+              servidores una vez completado el análisis.
             </li>
-            <li>Se eliminan automáticamente después del análisis</li>
-            <li>No se comparten con terceros para otros fines</li>
+            <li>
+            <strong>Con cuenta y sesión iniciada:</strong>
+              la imagen se almacena en nuestros servidores vinculada a su
+              historial de búsquedas, para que pueda consultarla posteriormente.
+              Puede eliminar estas imágenes borrando las entradas de su historial.
+            </li>
+            <li>Las imágenes no se comparten con terceros para otros fines.</li>
           </ul>
         </section>
 
@@ -52,7 +62,7 @@
           </p>
           <ul class="list-disc ml-6 text-gray-700 mb-4">
             <li>Proporcionar el servicio de identificación de fuentes</li>
-            <li>Mejorar la precisión de nuestros algoritmos</li>
+            <li>Mostrar su historial de búsquedas cuando inicia sesión</li>
             <li>Mantener la funcionalidad del sitio web</li>
             <li>Cumplir con requisitos legales cuando sea necesario</li>
           </ul>
@@ -83,21 +93,42 @@
             4. Retención de datos
           </h2>
           <p class="text-gray-700 mb-4">
-            <strong>No almacenamos sus imágenes a largo plazo.</strong>
-            Las imágenes subidas se procesan inmediatamente y se eliminan de
-            nuestros servidores una vez completado el análisis. Este proceso
-            generalmente toma menos de 60 segundos.
+            El tiempo de retención de sus datos depende del tipo de usuario:
           </p>
+          <ul class="list-disc ml-6 text-gray-700 mb-4">
+            <li>
+              <strong>Usuarios anónimos:</strong>
+              las imágenes se procesan y se eliminan inmediatamente de nuestros
+              servidores. No guardamos ningún dato sobre la búsqueda.
+            </li>
+            <li>
+              <strong>Usuarios con cuenta:</strong>
+              las imágenes y los resultados de identificación (nombres de
+              fuentes, porcentajes de similitud y enlaces) se almacenan de
+              forma indefinida mientras su cuenta esté activa, para habilitar
+              el historial de búsquedas. Puede solicitar la eliminación de
+              estos datos contactando con nosotros.
+            </li>
+          </ul>
         </section>
 
         <section class="mb-8">
           <h2 class="text-2xl font-semibold text-gray-900 mb-4">
-            5. Cookies y tecnologías de seguimiento
+            5. Cookies y datos técnicos de sesión
           </h2>
           <p class="text-gray-700 mb-4">
             Utilizamos cookies esenciales para el funcionamiento del sitio web,
             como mantener su sesión activa. No utilizamos cookies de seguimiento
             publicitario ni compartimos datos con redes publicitarias.
+          </p>
+          <p class="text-gray-700 mb-4">
+            Para el funcionamiento seguro del servicio, almacenamos
+            temporalmente información técnica de sesión que puede incluir su
+            <strong>dirección IP</strong> y el
+            <strong>identificador de su navegador (user agent)</strong>.
+            Estos datos se utilizan exclusivamente para gestionar la
+            autenticación y la seguridad, y se eliminan al cerrar sesión o
+            cuando expira la sesión.
           </p>
         </section>
 
@@ -142,16 +173,7 @@
 
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { computed } from 'vue'
-
-// Computed properties
-const currentDate = computed(() => {
-  return new Date().toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-})
+import { Head } from '@inertiajs/vue3'
 </script>
 
 <style scoped>

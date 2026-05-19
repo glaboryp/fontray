@@ -32,7 +32,7 @@ export default {
       },
       fontFamily: {
         sans: [
-          '"Instrument Sans"',
+          'Figtree',
           'ui-sans-serif',
           'system-ui',
           'sans-serif',

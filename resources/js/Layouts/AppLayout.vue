@@ -8,11 +8,16 @@
         <!-- Logo -->
         <div class="flex-shrink-0 flex items-center">
           <Link href="/" class="flex items-center">
-            <img
-              src="/images/logo_letras.png"
-              alt="Fontray"
-              class="h-16 w-auto"
-            />
+            <picture>
+              <source srcset="/images/logo_letras.webp" type="image/webp" />
+              <img
+                src="/images/logo_letras.png"
+                alt="Fontray"
+                class="h-16 w-auto"
+                width="680"
+                height="382"
+              />
+            </picture>
           </Link>
         </div>
 
@@ -25,7 +30,7 @@
                   <span class="inline-flex rounded-md">
                     <button
                       type="button"
-                      class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 transition duration-150 ease-in-out hover:text-primary focus:outline-none"
+                      class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 transition duration-150 ease-in-out hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     >
                       {{ $page.props.auth.user.name }}
 
@@ -34,6 +39,7 @@
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
+                        aria-hidden="true"
                       >
                         <path
                           fill-rule="evenodd"
@@ -62,7 +68,7 @@
 
             <div class="flex items-center sm:hidden">
               <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset transition duration-150 ease-in-out"
                 :aria-expanded="showingNavigationDropdown"
                 aria-label="Toggle navigation menu"
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
@@ -72,6 +78,7 @@
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     :class="{
@@ -117,7 +124,7 @@
             <!-- Mobile Hamburger Menu Button -->
             <div class="flex items-center sm:hidden">
               <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset transition duration-150 ease-in-out"
                 :aria-expanded="showingNavigationDropdown"
                 aria-label="Toggle navigation menu"
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
@@ -127,6 +134,7 @@
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     :class="{
@@ -225,7 +233,16 @@
       <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <div class="flex items-center mb-4 md:mb-0">
-            <img src="/images/logo.png" alt="Fontray" class="h-6 w-auto mr-2" />
+            <picture>
+              <source srcset="/images/logo.webp" type="image/webp" />
+              <img
+                src="/images/logo.png"
+                alt="Fontray"
+                class="h-6 w-auto mr-2"
+                width="500"
+                height="500"
+              />
+            </picture>
             <span class="text-lg font-semibold text-gray-900">Fontray</span>
           </div>
 
@@ -272,6 +289,7 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -289,10 +307,14 @@
     <!-- Loading overlay -->
     <div
       v-if="$page.props.loading"
+      role="status"
+      aria-live="polite"
+      aria-label="Cargando"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
         <div
+          aria-hidden="true"
           class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"
         />
         <span class="text-gray-700">Cargando...</span>

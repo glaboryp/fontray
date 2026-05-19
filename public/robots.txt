@@ -1,2 +1,8 @@
+# Este archivo es generado dinámicamente por la ruta /robots.txt
+# Para el robots.txt estático (crawlers que no siguen redirects), este archivo sirve como fallback.
 User-agent: *
-Disallow:
+Disallow: /dashboard
+Disallow: /history
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password

@@ -1,4 +1,16 @@
 <template>
+  <Head title="Identificador de fuentes tipográficas">
+    <meta
+      name="description"
+      content="Sube una imagen con texto y descubre qué fuente tipográfica se está utilizando. Rápido, preciso y completamente gratuito."
+    />
+    <component
+      :is="'script'"
+      type="application/ld+json"
+      v-text="faqSchemaJson"
+    />
+  </Head>
+
   <AppLayout>
     <!-- Hero Section -->
     <HeroSection @scroll-to-uploader="scrollToUploader" />
@@ -6,7 +18,6 @@
     <!-- Upload Section -->
     <UploadSection
       ref="uploaderElement"
-      @font-identified="handleFontIdentification"
     />
 
     <!-- How it works Section -->
@@ -18,14 +29,30 @@
 </template>
 
 <script setup>
+import { Head } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { faqs } from '@/data/faqs.js'
 import HeroSection from '@/Components/HeroSection.vue'
 import UploadSection from '@/Components/UploadSection.vue'
 import HowItWorksSection from '@/Components/HowItWorksSection.vue'
 import FaqSection from '@/Components/FaqSection.vue'
-import { router } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
 
-import { ref } from 'vue'
+// Schema.org FAQPage
+const faqSchemaJson = computed(() =>
+  JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  })
+)
 
 // Refs
 const uploaderElement = ref(null)
@@ -37,15 +64,7 @@ const scrollToUploader = () => {
   }
 }
 
-const handleFontIdentification = fontData => {
-  const queryString = new window.URLSearchParams({
-    fonts: JSON.stringify(fontData.fonts || []),
-    total: fontData.total_found || 0,
-    success: fontData.success || false,
-  }).toString()
 
-  router.visit(`/results?${queryString}`)
-}
 </script>
 
 <style scoped>

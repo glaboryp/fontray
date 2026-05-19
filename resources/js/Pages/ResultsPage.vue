@@ -1,4 +1,11 @@
 <template>
+  <Head title="Resultados de identificación">
+    <meta
+      name="description"
+      content="Explora las fuentes tipográficas identificadas en tu imagen. Consulta el nombre, categoría y variantes similares de cada fuente encontrada."
+    />
+  </Head>
+
   <AppLayout>
     <!-- Header Section -->
     <div class="bg-gradient-to-br from-primary to-primary-dark py-12">
@@ -76,6 +83,7 @@
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -89,10 +97,11 @@
 
           <div class="flex items-center space-x-4">
             <span class="text-gray-600">{{ totalFonts }} resultados</span>
+            <label for="sort-select" class="sr-only">Ordenar resultados</label>
             <select
+              id="sort-select"
               v-model="sortBy"
               class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
-              @change="sortFonts"
             >
               <option value="name">Ordenar por nombre</option>
               <option value="similarity">Ordenar por similitud</option>
@@ -114,6 +123,7 @@
                 :src="font.preview"
                 :alt="font.name"
                 class="w-full h-48 object-contain"
+                loading="lazy"
                 @error="handleImageError"
               />
               <div
@@ -193,7 +203,15 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { ref, computed, onMounted } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
+
+// Props de Inertia
+const props = defineProps({
+  fontResults: {
+    type: Object,
+    default: null,
+  },
+})
 
 // Reactive data
 const isLoading = ref(true)
@@ -201,9 +219,6 @@ const hasError = ref(false)
 const errorMessage = ref('')
 const fonts = ref([])
 const sortBy = ref('similarity')
-
-// Page props (datos pasados desde la navegación)
-const page = usePage()
 
 // Computed properties
 const totalFonts = computed(() => fonts.value.length)
@@ -223,40 +238,20 @@ const sortedFonts = computed(() => {
 
 // Methods
 const loadResults = () => {
-  try {
-    // Obtener datos de los query parameters de la URL
-    const urlParams = new window.URLSearchParams(window.location.search)
-    const errorParam = urlParams.get('error')
-    const fontsParam = urlParams.get('fonts')
-
-    if (errorParam) {
-      hasError.value = true
-      errorMessage.value = decodeURIComponent(errorParam)
-      isLoading.value = false
-      return
-    }
-
-    if (fontsParam) {
-      const parsedFonts = JSON.parse(decodeURIComponent(fontsParam))
-      fonts.value = parsedFonts || []
-    } else if (window.history?.state?.fonts) {
-      const historyStateFonts = window.history.state.fonts
-      fonts.value = Array.isArray(historyStateFonts)
-        ? historyStateFonts
-        : JSON.parse(historyStateFonts)
-    } else if (page.props.fonts) {
-      // Fallback: usar props de Inertia si están disponibles
-      fonts.value = page.props.fonts
-    }
-
+  if (!props.fontResults) {
+    // Usuario navegó directamente a /results sin haber subido una imagen
     isLoading.value = false
-  } catch (error) {
-    console.error('Error loading results:', error)
-    hasError.value = true
-    errorMessage.value =
-      'Error al cargar los resultados. Por favor, inténtalo de nuevo.'
-    isLoading.value = false
+    return
   }
+
+  if (props.fontResults.error) {
+    hasError.value = true
+    errorMessage.value = props.fontResults.error
+  } else {
+    fonts.value = props.fontResults.fonts || []
+  }
+
+  isLoading.value = false
 }
 
 const goBack = () => {
@@ -267,9 +262,7 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-const sortFonts = () => {
-  // El computed property se actualizará automáticamente
-}
+
 
 const handleImageError = event => {
   event.target.style.display = 'none'

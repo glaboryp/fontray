@@ -1,4 +1,11 @@
 <template>
+  <Head title="Ejemplos y Guía de Uso">
+    <meta
+      name="description"
+      content="Aprende qué tipos de imágenes funcionan mejor para identificar fuentes tipográficas. Ejemplos prácticos, consejos y errores comunes a evitar."
+    />
+  </Head>
+
   <AppLayout>
     <!-- Header Section -->
     <div class="bg-gradient-to-br from-primary to-primary-dark py-12">
@@ -233,7 +240,7 @@
 
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { router } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 
 const goToHome = () => {
   router.visit('/')
