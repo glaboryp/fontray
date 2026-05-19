@@ -44,7 +44,7 @@
               servidores una vez completado el análisis.
             </li>
             <li>
-            <strong>Con cuenta y sesión iniciada:</strong>
+              <strong>Con cuenta y sesión iniciada:</strong>
               la imagen se almacena en nuestros servidores vinculada a su
               historial de búsquedas, para que pueda consultarla posteriormente.
               Puede eliminar estas imágenes borrando las entradas de su historial.

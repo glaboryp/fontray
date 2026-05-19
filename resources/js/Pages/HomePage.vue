@@ -4,11 +4,9 @@
       name="description"
       content="Sube una imagen con texto y descubre qué fuente tipográfica se está utilizando. Rápido, preciso y completamente gratuito."
     />
-    <component
-      :is="'script'"
-      type="application/ld+json"
-      v-text="faqSchemaJson"
-    />
+    <component :is="'script'" type="application/ld+json">{{
+      faqSchemaJson
+    }}</component>
   </Head>
 
   <AppLayout>

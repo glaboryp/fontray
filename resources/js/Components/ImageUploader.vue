@@ -19,7 +19,12 @@
       <div v-if="!selectedImage" class="space-y-4">
         <!-- Upload Icon -->
         <div class="mx-auto w-16 h-16 text-gray-400">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -607,8 +612,7 @@ import ImageCropper from './ImageCropper.vue'
 import { useImageUpload } from '@/composables/useImageUpload'
 import { useFontIdentification } from '@/composables/useFontIdentification'
 
-// Emits
-const emit = defineEmits(['uploaded'])
+defineEmits(['uploaded'])
 
 // Composables
 const {

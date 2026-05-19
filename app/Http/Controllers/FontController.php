@@ -27,6 +27,8 @@ class FontController extends Controller
 
     public function identify(IdentifyFontRequest $request)
     {
+        $wantsJson = $request->expectsJson();
+
         $uploadedFile = $request->file('image');
         $file = $uploadedFile;
 
@@ -34,11 +36,22 @@ class FontController extends Controller
             try {
                 $file = $this->pdfFirstPageImageExtractor->extract($file);
             } catch (\Throwable) {
+                $payload = [
+                    'success' => false,
+                    'fonts' => [],
+                    'total_found' => 0,
+                    'message' => 'No se pudo procesar el PDF. Verifica que el archivo sea válido e inténtalo nuevamente.',
+                ];
+
+                if ($wantsJson) {
+                    return response()->json($payload, 400);
+                }
+
                 return to_route('results')->with('fontResults', [
                     'success' => false,
                     'fonts' => [],
                     'total_found' => 0,
-                    'error' => 'No se pudo procesar el PDF. Verifica que el archivo sea válido e inténtalo nuevamente.',
+                    'error' => $payload['message'],
                 ]);
             }
         }
@@ -64,6 +77,13 @@ class FontController extends Controller
                     'total_found' => $result['total_found'] ?? 0,
                 ],
             ]);
+        }
+
+        if ($wantsJson) {
+            $status = $result['status'] ?? 200;
+            unset($result['status']);
+
+            return response()->json($result, $status);
         }
 
         return to_route('results')->with('fontResults', [
