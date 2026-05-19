@@ -10,6 +10,7 @@ const { routerVisit, pageState } = vi.hoisted(() => ({
 vi.mock('@inertiajs/vue3', () => ({
   router: { visit: routerVisit },
   usePage: () => pageState,
+  Head: { template: '<div><slot /></div>' },
   Link: {
     name: 'Link',
     template: '<a><slot /></a>',
@@ -24,8 +25,8 @@ describe('ResultsPage', () => {
   })
 
   it('shows no results state when fonts array is empty', async () => {
-    pageState.props = { fonts: [] }
     const wrapper = mount(ResultsPage, {
+      props: { fontResults: { success: true, fonts: [], total_found: 0 } },
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },
@@ -57,10 +58,8 @@ describe('ResultsPage', () => {
         foundry: null,
       },
     ]
-    const encoded = encodeURIComponent(JSON.stringify(fonts))
-    window.history.pushState({}, '', `/results?fonts=${encoded}`)
-
     const wrapper = mount(ResultsPage, {
+      props: { fontResults: { success: true, fonts, total_found: fonts.length } },
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },
@@ -94,10 +93,8 @@ describe('ResultsPage', () => {
         foundry: null,
       },
     ]
-    const encoded = encodeURIComponent(JSON.stringify(fonts))
-    window.history.pushState({}, '', `/results?fonts=${encoded}`)
-
     const wrapper = mount(ResultsPage, {
+      props: { fontResults: { success: true, fonts, total_found: fonts.length } },
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },
@@ -133,10 +130,8 @@ describe('ResultsPage', () => {
         foundry: null,
       },
     ]
-    const encoded = encodeURIComponent(JSON.stringify(fonts))
-    window.history.pushState({}, '', `/results?fonts=${encoded}`)
-
     const wrapper = mount(ResultsPage, {
+      props: { fontResults: { success: true, fonts, total_found: fonts.length } },
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },
@@ -156,13 +151,15 @@ describe('ResultsPage', () => {
   it('shows a friendly API error message from query params', async () => {
     const friendlyError =
       'Has alcanzado temporalmente el límite de solicitudes. Por favor, inténtalo más tarde.'
-    window.history.pushState(
-      {},
-      '',
-      `/results?error=${encodeURIComponent(friendlyError)}`
-    )
-
     const wrapper = mount(ResultsPage, {
+      props: {
+        fontResults: {
+          success: false,
+          fonts: [],
+          total_found: 0,
+          error: friendlyError,
+        },
+      },
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },

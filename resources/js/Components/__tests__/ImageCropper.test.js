@@ -2,6 +2,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ImageCropper from '../ImageCropper.vue'
 
+// Provided by happy-dom; declared in global setup for consistency.
+/* global HTMLCanvasElement */
+
 HTMLCanvasElement.prototype.toBlob = function (callback) {
   callback(new Blob(['mock-blob'], { type: 'image/jpeg' }))
 }

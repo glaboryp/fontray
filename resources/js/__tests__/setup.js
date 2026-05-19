@@ -12,3 +12,8 @@ if (typeof URL.createObjectURL === 'undefined') {
 if (typeof URL.revokeObjectURL === 'undefined') {
   URL.revokeObjectURL = () => {}
 }
+
+// Happy DOM may not expose HTMLCanvasElement on global
+if (typeof globalThis.HTMLCanvasElement === 'undefined') {
+  globalThis.HTMLCanvasElement = window.HTMLCanvasElement
+}

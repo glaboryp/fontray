@@ -1,111 +1,99 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useFontIdentification } from '../useFontIdentification.js'
 
+const { inertiaPost } = vi.hoisted(() => ({
+  inertiaPost: vi.fn(),
+}))
+
+vi.mock('@inertiajs/vue3', () => ({
+  router: {
+    post: inertiaPost,
+  },
+}))
+
 describe('useFontIdentification', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
+    inertiaPost.mockReset()
   })
 
   it('identifyFont sends FormData to /identify', async () => {
-    const mockFetch = vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: true, fonts: [], total_found: 0 }),
-    })
-    vi.stubGlobal('fetch', mockFetch)
-
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
     const resizeStub = vi.fn().mockResolvedValue(image)
-    const emitStub = vi.fn()
 
-    await identifyFont(image, resizeStub, emitStub)
+    await identifyFont(image, resizeStub)
 
-    expect(mockFetch).toHaveBeenCalledWith('/identify', expect.objectContaining({
-      method: 'POST',
-    }))
+    expect(inertiaPost).toHaveBeenCalledWith(
+      '/identify',
+      expect.any(FormData),
+      expect.any(Object)
+    )
   })
 
   it('identifyFont emits font-identified on success', async () => {
-    const fonts = [{ name: 'Roboto' }]
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: true, fonts, total_found: 1 }),
-    }))
-
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
     const resizeStub = vi.fn().mockResolvedValue(image)
-    const emitStub = vi.fn()
 
-    await identifyFont(image, resizeStub, emitStub)
+    await identifyFont(image, resizeStub)
 
-    expect(emitStub).toHaveBeenCalledWith('font-identified', {
-      fonts,
-      totalFound: 1,
-    })
+    // UI navigation happens after POST; composable no longer emits
+    expect(inertiaPost).toHaveBeenCalled()
   })
 
   it('identifyFont returns error on failure', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: false, message: 'No text detected' }),
-    }))
-
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
     const resizeStub = vi.fn().mockResolvedValue(image)
-    const emitStub = vi.fn()
 
-    const result = await identifyFont(image, resizeStub, emitStub)
+    await identifyFont(image, resizeStub)
 
-    expect(result.success).toBe(false)
-    expect(result.message).toBe('No text detected')
-    expect(emitStub).not.toHaveBeenCalled()
+    // Server-side validation/errors are handled via redirect/session; composable just POSTs
+    expect(inertiaPost).toHaveBeenCalled()
   })
 
   it('identifyFont sets isProcessing during request', async () => {
-    let resolvePromise
-    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => {
-      return new Promise((resolve) => {
-        resolvePromise = resolve
-      })
-    }))
-
     const { identifyFont, isProcessing } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
     const resizeStub = vi.fn().mockResolvedValue(image)
-    const emitStub = vi.fn()
 
     expect(isProcessing.value).toBe(false)
 
-    const promise = identifyFont(image, resizeStub, emitStub)
-    await vi.waitFor(() => expect(isProcessing.value).toBe(true))
+    // Inertia router is synchronous here; we simulate async finish callback
+    inertiaPost.mockImplementation((_url, _data, opts) => {
+      setTimeout(() => opts?.onFinish?.(), 0)
+    })
 
-    resolvePromise({ json: () => Promise.resolve({ success: true, fonts: [], total_found: 0 }) })
-    await promise
+    await identifyFont(image, resizeStub)
+    expect(isProcessing.value).toBe(true)
+
+    await vi.waitFor(() => expect(isProcessing.value).toBe(false))
 
     expect(isProcessing.value).toBe(false)
   })
 
   it('identifyFont handles network error', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
-
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
     const resizeStub = vi.fn().mockResolvedValue(image)
-    const emitStub = vi.fn()
 
-    const result = await identifyFont(image, resizeStub, emitStub)
+    inertiaPost.mockImplementation(() => {
+      throw new Error('Network error')
+    })
 
-    expect(result.success).toBe(false)
-    expect(result.message).toContain('Error de conexión')
+    await identifyFont(image, resizeStub)
+    expect(inertiaPost).toHaveBeenCalled()
   })
 
   it('identifyFont does nothing if no image', async () => {
     const { identifyFont, isProcessing } = useFontIdentification()
     const resizeStub = vi.fn()
-    const emitStub = vi.fn()
 
-    await identifyFont(null, resizeStub, emitStub)
+    await identifyFont(null, resizeStub)
 
     expect(isProcessing.value).toBe(false)
     expect(resizeStub).not.toHaveBeenCalled()
+    expect(inertiaPost).not.toHaveBeenCalled()
   })
 })

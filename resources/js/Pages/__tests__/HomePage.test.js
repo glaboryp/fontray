@@ -4,6 +4,7 @@ import HomePage from '../HomePage.vue'
 
 vi.mock('@inertiajs/vue3', () => ({
   router: { visit: vi.fn() },
+  Head: { template: '<div><slot /></div>' },
   Link: {
     name: 'Link',
     template: '<a><slot /></a>',
