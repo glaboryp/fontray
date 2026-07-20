@@ -21,7 +21,6 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 - **Base de Datos**: PostgreSQL
 - **Contenedores**: Docker con Laravel Sail
 - **Build Tool**: Vite
-- **Despliegue**: Render.com
 
 ## 🏗️ Arquitectura
 
@@ -33,7 +32,7 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 
 ### Prerrequisitos
 
-- Docker Desktop instalado
+- Docker
 - Git
 - Cuenta en GitHub
 
@@ -239,7 +238,7 @@ Esto evita llamadas reales a WhatFontIs y hace los tests reproducibles.
 
 ### 🚀 Post-Lanzamiento (Fase 2)
 
-- [x] Despliegue en Render.com
+- [x] Despliegue en AWS
 - [ ] Analíticas con Google Analytics
 - [ ] Sistema de feedback
 - [ ] Monitorización de errores

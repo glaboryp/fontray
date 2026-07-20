@@ -1,0 +1,150 @@
+service: laravel
+
+# Set your team ID if you are using Bref Cloud (https://bref.sh/cloud)
+#bref:
+#    team: my-team-id
+
+provider:
+    name: aws
+    region: eu-central-1
+    # Environment variables shared by all functions
+    environment:
+        APP_ENV: ${param:appEnv}
+        APP_KEY: ${ssm:/fontray/prod/app-key}
+        APP_DEBUG: ${param:debug}
+        APP_URL: ${construct:website.url}
+        SESSION_DRIVER: database
+        CACHE_STORE: database
+        QUEUE_CONNECTION: database
+        # Maintenance mode: https://bref.sh/docs/laravel/maintenance-mode
+        MAINTENANCE_MODE: ${param:maintenance, null}
+        # Logging configuration: https://bref.sh/docs/environment/logs
+        LOG_CHANNEL: stderr
+        LOG_STDERR_FORMATTER: Bref\Monolog\CloudWatchFormatter
+        # Database (Neon) - pooler endpoint, fine for normal app traffic
+        DB_CONNECTION: pgsql
+        DB_HOST: ep-fancy-meadow-asys5td7-pooler.c-4.eu-central-1.aws.neon.tech
+        DB_PORT: 5432
+        DB_DATABASE: neondb
+        DB_USERNAME: neondb_owner
+        DB_PASSWORD: ${ssm:/fontray/prod/db-password}
+        DB_SSLMODE: require
+        # File storage (S3) - no AWS_ACCESS_KEY_ID/SECRET on purpose:
+        # the Lambda execution role's IAM permissions (below) are used instead
+        FILESYSTEM_PUBLIC_DRIVER: s3
+        AWS_BUCKET: fontray-uploads-058264330199-eu-central-1-an
+        WHATFONTIS_API_KEY: ${ssm:/fontray/prod/whatfontis-api-key}
+    iam:
+        role:
+            statements:
+                - Effect: Allow
+                  Action:
+                      - s3:GetObject
+                      - s3:PutObject
+                      - s3:DeleteObject
+                  Resource: arn:aws:s3:::fontray-uploads-058264330199-eu-central-1-an/*
+                - Effect: Allow
+                  Action:
+                      - s3:ListBucket
+                  Resource: arn:aws:s3:::fontray-uploads-058264330199-eu-central-1-an
+
+functions:
+
+    # This function runs the Laravel website/API
+    web:
+        handler: public/index.php
+        runtime: php-84-fpm
+        timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
+        events:
+            - httpApi: '*'
+
+    # This function lets us run artisan commands in Lambda (migrations, etc.)
+    artisan:
+        handler: artisan
+        runtime: php-84-console
+        timeout: 720 # in seconds
+        environment:
+            # DDL (migrations) needs the direct Neon endpoint, not the pooler
+            DB_HOST: ep-fancy-meadow-asys5td7.c-4.eu-central-1.aws.neon.tech
+        # Uncomment to also run the scheduler every minute
+        #events:
+        #    - schedule:
+        #          rate: rate(1 minute)
+        #          input: '"schedule:run"'
+
+constructs:
+    # SQS queue for Laravel jobs
+    # See https://bref.sh/docs/laravel/queues
+    #jobs:
+    #    type: queue
+    #    worker:
+    #        handler: Bref\LaravelBridge\Queue\QueueHandler
+    #        runtime: php-84
+    #        timeout: 60 # seconds
+
+    # S3 bucket for file storage
+    #storage:
+    #    type: storage
+    #    lifecycleRules:
+    #        # Files in the `tmp/` folder will be cleaned after 1 day (e.g. failed uploads, temp files, etc.)
+    #        -   prefix: tmp/
+    #            expirationInDays: 1
+    #    # S3 buckets have ACLs disabled by default since 2023, but Laravel/Flysystem sends ACL
+    #    # headers on every S3 operation. This setting avoids errors (the bucket stays 100% private).
+    #    allowAcl: true
+    #    # Files stored under the `public/` prefix are publicly readable (e.g. uploaded avatars).
+    #    # See https://bref.sh/docs/laravel/file-storage#public-files
+    #    publicPath: public
+    #    # CORS is required for uploading files from the browser via presigned URLs, put the URL of your website here
+    #    # See https://bref.sh/docs/laravel/file-storage#large-files and https://github.com/getlift/lift/blob/master/docs/storage.md#cors
+    #    cors: ${construct:website.url}
+
+    # CloudFront + S3 for website assets (compatible with Inertia, Livewire, etc.)
+    # See https://bref.sh/docs/use-cases/websites
+    website:
+        type: server-side-website
+        versionedAssets: true # zero-downtime deploys for assets
+        assets:
+            '/build/*': public/build
+            '/images/*': public/images
+            '/favicon.ico': public/favicon.ico
+            '/robots.txt': public/robots.txt
+
+# Environment-specific parameters
+# See https://github.com/oss-serverless/serverless/blob/main/docs/guides/parameters.md
+params:
+    default:
+        # Laravel's APP_ENV. See https://bref.sh/docs/laravel/environments
+        appEnv: ${sls:stage}
+        debug: 0
+    prod:
+        # Laravel expects "production" for `app()->isProduction()` to work correctly
+        appEnv: production
+    dev:
+        debug: 1 # Enable debug in `dev`
+
+package:
+    # Files and directories to exclude from deployment
+    patterns:
+        - '!.env' # Don't deploy local config
+        - '!public/hot' # Leftover from `npm run dev`; would break Vite asset resolution if present
+        - '!node_modules/**'
+        - '!public/storage'
+        - '!resources/assets/**'
+        - '!resources/css/**'
+        - '!resources/images/**'
+        - '!resources/js/**'
+        - '!storage/**'
+        - '!tests/**'
+        - '!database/*.sqlite'
+        # Exclude assets except for the manifest files
+        - '!public/build/**'
+        - 'public/build/manifest.json'
+        - 'public/build/fonts-manifest.json'
+
+plugins:
+    # We need to include the Bref plugin
+    - ./vendor/bref/bref
+    # Uncomment the Serverless Lift plugin if you use constructs
+    # See https://github.com/getlift/lift
+    - serverless-lift
