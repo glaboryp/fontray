@@ -109,7 +109,7 @@ class FontController extends Controller
             abort(404);
         }
 
-        return response()->file(Storage::disk('public')->path($imageReference));
+        return Storage::disk('public')->response($imageReference);
     }
 
     private function resolveHistoryImageUrl(SearchHistory $history): ?string
