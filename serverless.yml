@@ -56,6 +56,14 @@ functions:
         handler: public/index.php
         runtime: php-84-fpm
         timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
+        layers:
+            # Imagick + Ghostscript, needed to rasterize the first page of
+            # user-uploaded PDFs (see PdfFirstPageImageExtractor)
+            - ${bref-extra:imagick-php-84}
+        environment:
+            # Hardened policy.xml for ImageMagick/Ghostscript against untrusted
+            # PDFs; other config files still fall back to IM's defaults
+            MAGICK_CONFIGURE_PATH: /var/task/docker/imagick
         events:
             - httpApi: '*'
 
@@ -148,6 +156,8 @@ package:
 plugins:
     # We need to include the Bref plugin
     - ./vendor/bref/bref
+    # Resolves ${bref-extra:...} layer references (e.g. imagick-php-84)
+    - ./vendor/bref/extra-php-extensions
     # Uncomment the Serverless Lift plugin if you use constructs
     # See https://github.com/getlift/lift
     - serverless-lift
