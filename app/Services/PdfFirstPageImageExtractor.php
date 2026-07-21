@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
+use Imagick;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 
@@ -18,9 +19,26 @@ class PdfFirstPageImageExtractor
 
         $outputPath = $tempPath.'.png';
 
-        $manager = new ImageManager(new Driver);
-        $image = $manager->read($pdf->getRealPath().'[0]');
-        $image->toPng()->save($outputPath);
+        try {
+            // Imagick's own page-selector syntax ("path[0]") must be resolved by
+            // Imagick itself: Intervention's file-path decoder rejects it outright
+            // because is_file('path[0]') is always false, so we decode the first
+            // page via Imagick directly and hand the resulting object to Intervention.
+            $firstPage = new Imagick;
+            $firstPage->readImage($pdf->getRealPath().'[0]');
+
+            $manager = new ImageManager(new Driver);
+            $image = $manager->read($firstPage);
+            $image->toPng()->save($outputPath);
+        } finally {
+            @unlink($tempPath);
+        }
+
+        app()->terminating(function () use ($outputPath) {
+            if (is_file($outputPath)) {
+                @unlink($outputPath);
+            }
+        });
 
         return new UploadedFile(
             $outputPath,
