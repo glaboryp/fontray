@@ -50,3 +50,4 @@ Una vez confirmado por el usuario, crea la pr en Github
 - Si no hay commits nuevos respecto a la rama destino, avisa al usuario.
 - Si la rama destino no existe en remoto, avisa antes de crear la PR.
 - Nunca añadas `Co-authored-by: Claude` ni `Generated with Claude Code` ni similar.
+- Cada frase o bullet del cuerpo de la PR va en una sola línea, sin saltos de línea manuales a mitad de frase (nada de cortar cada 8-10 palabras). Deja que el texto haga wrap de forma natural.
