@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [FontController::class, 'index'])->name('home');
-Route::post('/identify', [FontController::class, 'identify'])->name('identify');
+Route::post('/identify', [FontController::class, 'identify'])
+    ->middleware('throttle:identify')
+    ->name('identify');
 
 Route::get('/results', function () {
     return Inertia::render('ResultsPage');
