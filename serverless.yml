@@ -30,6 +30,12 @@ provider:
         DB_USERNAME: neondb_owner
         DB_PASSWORD: ${ssm:/fontray/prod/db-password}
         DB_SSLMODE: require
+        # Direct (non-pooled) endpoint, used only by the "pgsql_direct"
+        # connection: the rate limiter's Cache::increment() needs a real
+        # multi-statement transaction, which Neon's pooler does not
+        # reliably support.
+        DB_HOST_DIRECT: ep-fancy-meadow-asys5td7.c-4.eu-central-1.aws.neon.tech
+        DB_CACHE_CONNECTION: pgsql_direct
         # File storage (S3) - no AWS_ACCESS_KEY_ID/SECRET on purpose:
         # the Lambda execution role's IAM permissions (below) are used instead
         FILESYSTEM_HISTORY_IMAGES_DRIVER: s3
