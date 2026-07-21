@@ -32,7 +32,7 @@ provider:
         DB_SSLMODE: require
         # File storage (S3) - no AWS_ACCESS_KEY_ID/SECRET on purpose:
         # the Lambda execution role's IAM permissions (below) are used instead
-        FILESYSTEM_PUBLIC_DRIVER: s3
+        FILESYSTEM_HISTORY_IMAGES_DRIVER: s3
         AWS_BUCKET: fontray-uploads-058264330199-eu-central-1-an
         WHATFONTIS_API_KEY: ${ssm:/fontray/prod/whatfontis-api-key}
     iam:
