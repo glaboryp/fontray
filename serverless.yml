@@ -70,6 +70,11 @@ functions:
             # Hardened policy.xml for ImageMagick/Ghostscript against untrusted
             # PDFs; other config files still fall back to IM's defaults
             MAGICK_CONFIGURE_PATH: /var/task/docker/imagick
+            # Without this, Bref sends binary bodies (e.g. history images
+            # served via Storage::response()) as raw UTF-8 in the Lambda
+            # JSON payload, which fails with "Malformed UTF-8 characters".
+            # See https://bref.sh/docs/use-cases/http/binary-requests-responses
+            BREF_BINARY_RESPONSES: '1'
         events:
             - httpApi: '*'
 
