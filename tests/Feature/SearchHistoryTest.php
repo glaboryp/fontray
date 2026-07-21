@@ -20,7 +20,7 @@ class SearchHistoryTest extends TestCase
     public function test_authenticated_user_successful_identification_saves_search_history(): void
     {
         $user = User::factory()->create();
-        Storage::fake('public');
+        Storage::fake('history-images');
 
         $this->mock(FontIdentificationService::class, function (MockInterface $mock) {
             $mock->shouldReceive('identify')
@@ -49,7 +49,7 @@ class SearchHistoryTest extends TestCase
         $this->assertSame($user->id, $saved->user_id);
         $this->assertIsString($saved->image_reference);
         $this->assertStringStartsWith('images/history/', $saved->image_reference);
-        $this->assertTrue(Storage::disk('public')->exists($saved->image_reference));
+        $this->assertTrue(Storage::disk('history-images')->exists($saved->image_reference));
         $this->assertSame(1, json_decode($saved->font_results, true)['total_found']);
     }
 
@@ -182,13 +182,13 @@ class SearchHistoryTest extends TestCase
 
     public function test_history_image_route_denies_access_to_other_user_history_image(): void
     {
-        Storage::fake('public');
+        Storage::fake('history-images');
 
         $owner = User::factory()->create();
         $otherUser = User::factory()->create();
 
         $path = UploadedFile::fake()->create('private-history.png', 100, 'image/png')
-            ->store('images/history', 'public');
+            ->store('images/history', 'history-images');
 
         $historyId = DB::table('search_histories')->insertGetId([
             'user_id' => $owner->id,
@@ -205,12 +205,12 @@ class SearchHistoryTest extends TestCase
 
     public function test_history_image_route_serves_owned_history_image(): void
     {
-        Storage::fake('public');
+        Storage::fake('history-images');
 
         $user = User::factory()->create();
 
         $path = UploadedFile::fake()->create('owned-history.png', 100, 'image/png')
-            ->store('images/history', 'public');
+            ->store('images/history', 'history-images');
 
         $historyId = DB::table('search_histories')->insertGetId([
             'user_id' => $user->id,

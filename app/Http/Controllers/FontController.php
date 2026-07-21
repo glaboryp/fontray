@@ -48,7 +48,7 @@ class FontController extends Controller
 
             try {
                 $fileToPersist = $file;
-                $imageReference = $fileToPersist->store('images/history', 'public');
+                $imageReference = $fileToPersist->store('images/history', 'history-images');
             } catch (\Throwable) {
                 // Mantener compatibilidad en caso de fallo al persistir imagen.
             }
@@ -105,11 +105,11 @@ class FontController extends Controller
             abort(404);
         }
 
-        if (! Storage::disk('public')->exists($imageReference)) {
+        if (! Storage::disk('history-images')->exists($imageReference)) {
             abort(404);
         }
 
-        return Storage::disk('public')->response($imageReference);
+        return Storage::disk('history-images')->response($imageReference);
     }
 
     private function resolveHistoryImageUrl(SearchHistory $history): ?string

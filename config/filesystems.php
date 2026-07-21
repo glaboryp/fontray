@@ -38,10 +38,13 @@ return [
             'report' => false,
         ],
 
-        'public' => [
-            'driver' => env('FILESYSTEM_PUBLIC_DRIVER', 'local'),
+        // Stores history images. Never expose this disk's URLs directly: it is
+        // deliberately private so that access only ever happens through the
+        // authenticated FontController::showHistoryImage route.
+        'history-images' => [
+            'driver' => env('FILESYSTEM_HISTORY_IMAGES_DRIVER', 'local'),
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'visibility' => 'private',
             'throw' => false,
             'report' => false,
             'key' => env('AWS_ACCESS_KEY_ID'),
