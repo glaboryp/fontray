@@ -105,6 +105,8 @@ constructs:
     website:
         type: server-side-website
         versionedAssets: true # zero-downtime deploys for assets
+        domain: fontray.dpdns.org
+        certificate: arn:aws:acm:us-east-1:058264330199:certificate/969ae28b-ffc4-466f-bc23-57bb7a1c9db4
         assets:
             '/build/*': public/build
             '/images/*': public/images
