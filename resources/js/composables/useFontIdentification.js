@@ -9,6 +9,15 @@ export function useFontIdentification() {
     isProcessing.value = true
 
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+
+      if (!csrfToken) {
+        return {
+          success: false,
+          message: 'No se pudo verificar la sesión. Por favor, recarga la página e inténtalo de nuevo.',
+        }
+      }
+
       const processedImage = await resizeImageIfNeeded(image)
 
       const formData = new FormData()
@@ -18,9 +27,7 @@ export function useFontIdentification() {
         method: 'POST',
         body: formData,
         headers: {
-          'X-CSRF-TOKEN': document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute('content'),
+          'X-CSRF-TOKEN': csrfToken,
         },
       })
 
