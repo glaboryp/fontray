@@ -198,6 +198,52 @@ class FontControllerTest extends TestCase
         $response->assertJsonPath('message', 'No se pudo procesar el PDF. Verifica que el archivo sea válido e inténtalo nuevamente.');
     }
 
+    public function test_identify_ignores_pdf_extension_when_the_real_mime_type_is_not_pdf(): void
+    {
+        $file = UploadedFile::fake()->create('renamed.pdf', 100, 'image/png');
+
+        $this->mock(PdfFirstPageImageExtractor::class, function (MockInterface $mock) {
+            $mock->shouldNotReceive('extract');
+        });
+
+        $this->mock(FontIdentificationService::class, function (MockInterface $mock) use ($file) {
+            $mock->shouldReceive('identify')
+                ->once()
+                ->withArgs(fn (UploadedFile $passed) => $passed->getClientOriginalName() === $file->getClientOriginalName())
+                ->andReturn(['success' => true, 'fonts' => [], 'total_found' => 0]);
+        });
+
+        $response = $this->postJson('/identify', [
+            'image' => $file,
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_identify_extracts_pdf_first_page_even_with_a_non_pdf_file_extension(): void
+    {
+        $file = UploadedFile::fake()->create('misnamed.png', 100, 'application/pdf');
+        $firstPageImage = UploadedFile::fake()->create('misnamed-page-1.png', 50, 'image/png');
+
+        $this->mock(PdfFirstPageImageExtractor::class, function (MockInterface $mock) use ($firstPageImage) {
+            $mock->shouldReceive('extract')
+                ->once()
+                ->andReturn($firstPageImage);
+        });
+
+        $this->mock(FontIdentificationService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('identify')
+                ->once()
+                ->andReturn(['success' => true, 'fonts' => [], 'total_found' => 0]);
+        });
+
+        $response = $this->postJson('/identify', [
+            'image' => $file,
+        ]);
+
+        $response->assertStatus(200);
+    }
+
     public function test_identify_endpoint_is_rate_limited_per_ip(): void
     {
         Http::fake([
