@@ -197,4 +197,28 @@ class FontControllerTest extends TestCase
         ]);
         $response->assertJsonPath('message', 'No se pudo procesar el PDF. Verifica que el archivo sea válido e inténtalo nuevamente.');
     }
+
+    public function test_identify_endpoint_is_rate_limited_per_ip(): void
+    {
+        Http::fake([
+            'https://www.whatfontis.com/*' => Http::response(
+                json_decode(file_get_contents(base_path('tests/Fixtures/whatfontis_success_response.json')), true),
+                200
+            ),
+        ]);
+
+        for ($i = 0; $i < 10; $i++) {
+            $response = $this->postJson('/identify', [
+                'image' => $this->fakeImage(),
+            ]);
+
+            $response->assertStatus(200);
+        }
+
+        $response = $this->postJson('/identify', [
+            'image' => $this->fakeImage(),
+        ]);
+
+        $response->assertStatus(429);
+    }
 }
