@@ -8,8 +8,18 @@ describe('useImageUpload', () => {
     const textFile = new File(['hello'], 'doc.txt', { type: 'text/plain' })
     processFile(textFile)
 
-    expect(error.value).toContain('imagen válido')
+    expect(error.value).toContain('imagen o un PDF')
     expect(selectedImage.value).toBeNull()
+  })
+
+  it('processFile accepts a PDF file', () => {
+    const { processFile, selectedImage, error } = useImageUpload()
+
+    const pdfFile = new File(['fake-pdf'], 'document.pdf', { type: 'application/pdf' })
+    processFile(pdfFile)
+
+    expect(error.value).toBe('')
+    expect(selectedImage.value.name).toBe(pdfFile.name)
   })
 
   it('processFile validates file size (max 10MB)', () => {
