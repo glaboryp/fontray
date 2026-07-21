@@ -30,7 +30,7 @@ class FontController extends Controller
         $uploadedFile = $request->file('image');
         $file = $uploadedFile;
 
-        if ($file->getClientOriginalExtension() === 'pdf') {
+        if ($file->getMimeType() === 'application/pdf') {
             try {
                 $file = $this->pdfFirstPageImageExtractor->extract($file);
             } catch (\Throwable) {
@@ -64,7 +64,7 @@ class FontController extends Controller
             ]);
         }
 
-        $status = $result['status'] ?? ($result['success'] ? 200 : 200);
+        $status = $result['status'] ?? 200;
         unset($result['status']);
 
         return response()->json($result, $status);
@@ -101,7 +101,7 @@ class FontController extends Controller
             abort(404);
         }
 
-        if (! Str::startsWith($imageReference, ['images/', 'uploads/'])) {
+        if (! $this->isServableReference($imageReference)) {
             abort(404);
         }
 
@@ -124,10 +124,15 @@ class FontController extends Controller
             return $imageReference;
         }
 
-        if (Str::startsWith($imageReference, ['images/', 'uploads/'])) {
+        if ($this->isServableReference($imageReference)) {
             return route('history.image', ['history' => $history->id]);
         }
 
         return null;
+    }
+
+    private function isServableReference(string $imageReference): bool
+    {
+        return Str::startsWith($imageReference, ['images/', 'uploads/']);
     }
 }
