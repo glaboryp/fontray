@@ -98,6 +98,23 @@ describe('useFontIdentification', () => {
     expect(result.message).toContain('Error de conexión')
   })
 
+  it('identifyFont returns a friendly error when the csrf meta tag is missing', async () => {
+    const mockFetch = vi.fn()
+    vi.stubGlobal('fetch', mockFetch)
+    vi.spyOn(document, 'querySelector').mockReturnValue(null)
+
+    const { identifyFont } = useFontIdentification()
+    const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
+    const resizeStub = vi.fn().mockResolvedValue(image)
+    const emitStub = vi.fn()
+
+    const result = await identifyFont(image, resizeStub, emitStub)
+
+    expect(result.success).toBe(false)
+    expect(result.message).toContain('sesión')
+    expect(mockFetch).not.toHaveBeenCalled()
+  })
+
   it('identifyFont does nothing if no image', async () => {
     const { identifyFont, isProcessing } = useFontIdentification()
     const resizeStub = vi.fn()
