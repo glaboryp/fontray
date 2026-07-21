@@ -2,12 +2,17 @@
 
 namespace App\Services;
 
+use App\Services\WhatFontIs\FontApiErrorClassifier;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class FontIdentificationService
 {
+    public function __construct(
+        private FontApiErrorClassifier $errorClassifier
+    ) {}
+
     public function identify(UploadedFile $image): array
     {
         if (config('services.whatfontis.mock')) {
@@ -35,37 +40,13 @@ class FontIdentificationService
                     'response' => $errorMessage,
                 ]);
 
-                if ($statusCode === 429 || stripos($errorMessage, 'rate limit') !== false) {
-                    return [
-                        'success' => false,
-                        'message' => 'Has alcanzado temporalmente el límite de solicitudes. Por favor, inténtalo más tarde.',
-                        'status' => 429,
-                    ];
-                } elseif (stripos($errorMessage, 'too large') !== false) {
-                    return [
-                        'success' => false,
-                        'message' => 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña o de menor resolución.',
-                        'status' => 400,
-                    ];
-                } elseif (stripos($errorMessage, 'No text box detected') !== false) {
-                    return [
-                        'success' => false,
-                        'message' => 'No se detectó texto en la imagen. Asegúrate de que la imagen contenga texto claro y legible.',
-                        'status' => 400,
-                    ];
-                } elseif (stripos($errorMessage, 'No characters detected') !== false || stripos($errorMessage, 'No Characters Found') !== false || stripos($errorMessage, 'No chars found') !== false) {
-                    return [
-                        'success' => false,
-                        'message' => 'No se detectaron caracteres legibles en la imagen. Esta herramienta funciona mejor con texto normal en lugar de logotipos muy estilizados. Intenta con una imagen que contenga texto más convencional.',
-                        'status' => 400,
-                    ];
-                } else {
-                    return [
-                        'success' => false,
-                        'message' => 'Error al procesar la imagen. Por favor, inténtalo de nuevo con una imagen diferente.',
-                        'status' => 500,
-                    ];
-                }
+                $error = $this->errorClassifier->classify($statusCode, $errorMessage);
+
+                return [
+                    'success' => false,
+                    'message' => $error->message(),
+                    'status' => $error->httpStatus(),
+                ];
             }
 
             $data = $response->json();
