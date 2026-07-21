@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "bref/bref": "*",
+        "bref/extra-php-extensions": "^3.0",
         "bref/laravel-bridge": "3.0.7",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^3.11",

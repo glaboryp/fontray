@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policymap [
+  <!ELEMENT policymap (policy)*>
+  <!ATTLIST policymap xmlns CDATA #FIXED ''>
+  <!ELEMENT policy EMPTY>
+  <!ATTLIST policy xmlns CDATA #FIXED '' domain NMTOKEN #REQUIRED name NMTOKEN #IMPLIED pattern CDATA #IMPLIED rights NMTOKEN #IMPLIED value CDATA #IMPLIED>
+]>
+<!--
+  Hardened policy for the Lambda "web" function, which only ever needs to
+  *read* an untrusted, user-uploaded PDF and rasterize its first page
+  (PdfFirstPageImageExtractor). Loaded via MAGICK_CONFIGURE_PATH; any config
+  file not present here (delegates.xml, type.xml, ...) still falls back to
+  ImageMagick's normal search path and compiled-in defaults.
+-->
+<policymap>
+  <!-- PDF: read-only. We never write PDFs, so no delegate should be able to
+       trick ImageMagick into producing one. -->
+  <policy domain="coder" rights="read" pattern="PDF" />
+
+  <!-- The ImageTragick (CVE-2016-3714) family of delegate coders. None of
+       these are needed for image identification; disable them outright. -->
+  <policy domain="coder" rights="none" pattern="EPHEMERAL" />
+  <policy domain="coder" rights="none" pattern="URL" />
+  <policy domain="coder" rights="none" pattern="HTTPS" />
+  <policy domain="coder" rights="none" pattern="MVG" />
+  <policy domain="coder" rights="none" pattern="MSL" />
+  <policy domain="coder" rights="none" pattern="TEXT" />
+  <policy domain="coder" rights="none" pattern="SHOW" />
+  <policy domain="coder" rights="none" pattern="WIN" />
+  <policy domain="coder" rights="none" pattern="PLT" />
+  <policy domain="coder" rights="none" pattern="LABEL" />
+
+  <!-- Block "@filename" indirect reads (e.g. "@/etc/passwd"). -->
+  <policy domain="path" rights="none" pattern="@*" />
+
+  <!-- Cap the resources a single hostile PDF can make Ghostscript consume. -->
+  <policy domain="resource" name="memory" value="256MiB" />
+  <policy domain="resource" name="map" value="512MiB" />
+  <policy domain="resource" name="width" value="8000" />
+  <policy domain="resource" name="height" value="8000" />
+  <policy domain="resource" name="area" value="64MP" />
+  <policy domain="resource" name="disk" value="512MiB" />
+  <policy domain="resource" name="time" value="20" />
+</policymap>
