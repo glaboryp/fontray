@@ -11,8 +11,8 @@ export function useImageUpload() {
     error.value = ''
     success.value = ''
 
-    if (!file.type.startsWith('image/')) {
-      error.value = 'Por favor selecciona un archivo de imagen válido.'
+    if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+      error.value = 'Por favor selecciona una imagen o un PDF válido.'
       return
     }
 

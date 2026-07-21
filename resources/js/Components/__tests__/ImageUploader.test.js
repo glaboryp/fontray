@@ -96,6 +96,26 @@ describe('ImageUploader', () => {
     expect(wrapper.text()).toContain('Por favor selecciona un archivo de imagen válido.')
   })
 
+  it('shows a PDF placeholder instead of an image preview and hides the crop button', async () => {
+    state.selectedImage.value = { name: 'document.pdf', size: 10000, type: 'application/pdf' }
+    state.previewUrl.value = 'data:application/pdf;base64,mock'
+
+    const wrapper = mount(ImageUploader, {
+      global: {
+        stubs: {
+          ImageCropper: true,
+        },
+      },
+    })
+
+    await nextTick()
+
+    expect(wrapper.find('img[alt="Imagen seleccionada"]').exists()).toBe(false)
+    expect(wrapper.text()).toContain('PDF seleccionado')
+    expect(wrapper.text()).toContain('document.pdf')
+    expect(wrapper.findAll('button').find((btn) => btn.text().includes('Recortar imagen'))).toBeFalsy()
+  })
+
   it('calls identifyFont when button clicked', async () => {
     state.selectedImage.value = { name: 'test.jpg', size: 10000 }
     state.previewUrl.value = 'blob:mock-url'

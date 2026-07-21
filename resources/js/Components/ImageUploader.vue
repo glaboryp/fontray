@@ -85,7 +85,7 @@
           </div>
 
           <p class="text-sm text-gray-500 mt-3">
-            Soporta JPG, PNG, WebP hasta 10MB
+            Soporta JPG, PNG, WebP o PDF hasta 10MB
           </p>
         </div>
       </div>
@@ -94,10 +94,30 @@
       <div v-else class="space-y-4">
         <div class="relative">
           <img
+            v-if="!isPdfSelected"
             :src="previewUrl"
             alt="Imagen seleccionada"
             class="max-w-full max-h-64 mx-auto rounded-lg shadow-lg"
           />
+          <div
+            v-else
+            class="flex items-center justify-center gap-3 max-w-xs mx-auto rounded-lg border border-gray-200 bg-gray-50 p-6"
+          >
+            <svg
+              class="w-10 h-10 text-gray-400 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <span class="text-gray-700 font-medium break-all">PDF seleccionado</span>
+          </div>
 
           <!-- Remove button -->
           <button
@@ -127,8 +147,9 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-3">
-            <!-- Crop Button -->
+            <!-- Crop Button: cropping only applies to raster images, not PDFs -->
             <button
+              v-if="!isPdfSelected"
               class="bg-primary hover:bg-primary-dark hover:shadow-lg text-white font-medium py-3 px-8 rounded-lg transition-all cursor-pointer"
               @click="openCropper"
             >
@@ -178,7 +199,7 @@
     <input
       ref="fileInput"
       type="file"
-      accept="image/*"
+      accept="image/*,application/pdf"
       class="hidden"
       @change="handleFileSelect"
     />
@@ -586,7 +607,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ImageCropper from './ImageCropper.vue'
 import { useImageUpload } from '@/composables/useImageUpload'
@@ -615,6 +636,8 @@ const { isProcessing, identifyFont: identifyFontCore } = useFontIdentification()
 // Refs
 const fileInput = ref(null)
 const showCropper = ref(false)
+
+const isPdfSelected = computed(() => selectedImage.value?.type === 'application/pdf')
 
 // Camera related
 const showCamera = ref(false)

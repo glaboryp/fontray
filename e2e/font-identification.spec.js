@@ -5,7 +5,7 @@ test('full flow: upload image -> identify -> see results', async ({ page }) => {
 
   await expect(page.locator('h1')).toContainText('Identifica cualquier')
 
-  const fileInput = page.locator('input[type="file"][accept="image/*"]')
+  const fileInput = page.locator('input[type="file"]')
   await fileInput.setInputFiles('tests/Fixtures/test_image.jpg')
 
   await expect(page.locator('img[alt="Imagen seleccionada"]')).toBeVisible()
@@ -27,7 +27,7 @@ test('upload flow: upload image -> crop/rotate/contrast -> identify', async ({
 }) => {
   await page.goto('/')
 
-  const fileInput = page.locator('input[type="file"][accept="image/*"]')
+  const fileInput = page.locator('input[type="file"]')
   await fileInput.setInputFiles('tests/Fixtures/test_image.jpg')
 
   await expect(page.locator('img[alt="Imagen seleccionada"]')).toBeVisible()
@@ -82,7 +82,7 @@ test('upload flow: upload image -> crop/rotate/contrast -> identify', async ({
 test('upload validation: rejects non-image file', async ({ page }) => {
   await page.goto('/')
 
-  const fileInput = page.locator('input[type="file"][accept="image/*"]')
+  const fileInput = page.locator('input[type="file"]')
   await fileInput.setInputFiles({
     name: 'not-image.txt',
     mimeType: 'text/plain',
@@ -90,8 +90,30 @@ test('upload validation: rejects non-image file', async ({ page }) => {
   })
 
   await expect(
-    page.getByText('Por favor selecciona un archivo de imagen válido.')
+    page.getByText('Por favor selecciona una imagen o un PDF válido.')
   ).toBeVisible()
+})
+
+test('upload flow: upload PDF -> identify', async ({ page }) => {
+  await page.goto('/')
+
+  const fileInput = page.locator('input[type="file"]')
+  await fileInput.setInputFiles('tests/Fixtures/blank_page.pdf')
+
+  await expect(page.getByText('PDF seleccionado')).toBeVisible()
+  await expect(page.getByText('blank_page.pdf')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: /Recortar imagen/i })
+  ).toHaveCount(0)
+
+  const identifyButton = page.getByRole('button', {
+    name: /Identificar fuente/i,
+  })
+  await identifyButton.click()
+
+  await expect(
+    page.getByRole('heading', { name: /Resultados de Identificación/i })
+  ).toBeVisible({ timeout: 15000 })
 })
 
 test('navigation: examples/privacy/terms/home all load correctly', async ({

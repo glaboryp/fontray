@@ -62,7 +62,7 @@ test('authenticated user sees search history after identification', async ({
 
   // Navigate to home and upload an image
   await page.goto('/')
-  const fileInput = page.locator('input[type="file"][accept="image/*"]')
+  const fileInput = page.locator('input[type="file"]')
   await fileInput.setInputFiles('tests/Fixtures/test_image.jpg')
   await expect(page.locator('img[alt="Imagen seleccionada"]')).toBeVisible()
 
