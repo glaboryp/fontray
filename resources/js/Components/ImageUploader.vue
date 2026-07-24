@@ -29,10 +29,10 @@
 
         <div>
           <h3 class="text-lg font-semibold text-gray-900 mb-2">
-            Sube tu imagen
+            Sube tu imagen o PDF
           </h3>
           <p class="text-gray-600 mb-4">
-            Arrastra y suelta una imagen aquí, o haz clic para seleccionar
+            Arrastra y suelta una imagen o PDF aquí, o haz clic para seleccionar
           </p>
 
           <!-- Upload Buttons -->
@@ -54,7 +54,7 @@
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4"
                 />
               </svg>
-              Seleccionar imagen
+              Seleccionar archivo
             </button>
 
             <button
@@ -105,6 +105,7 @@
           >
             <svg
               class="w-10 h-10 text-gray-400 flex-shrink-0"
+              aria-hidden="true"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -116,7 +117,9 @@
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <span class="text-gray-700 font-medium break-all">PDF seleccionado</span>
+            <span class="text-gray-700 font-medium break-all">
+              PDF seleccionado
+            </span>
           </div>
 
           <!-- Remove button -->
@@ -610,7 +613,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import ImageCropper from './ImageCropper.vue'
-import { useImageUpload } from '@/composables/useImageUpload'
+import { useImageUpload, PDF_MIME_TYPE } from '@/composables/useImageUpload'
 import { useFontIdentification } from '@/composables/useFontIdentification'
 
 // Emits
@@ -637,7 +640,9 @@ const { isProcessing, identifyFont: identifyFontCore } = useFontIdentification()
 const fileInput = ref(null)
 const showCropper = ref(false)
 
-const isPdfSelected = computed(() => selectedImage.value?.type === 'application/pdf')
+const isPdfSelected = computed(
+  () => selectedImage.value?.type === PDF_MIME_TYPE
+)
 
 // Camera related
 const showCamera = ref(false)

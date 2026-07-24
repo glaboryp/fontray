@@ -11,6 +11,10 @@ return new class extends Migration
      * DDL run inside Laravel's automatic per-migration transaction wrapper
      * (observed: migrate reported success, but the constraint never
      * actually existed afterwards). Running outside a transaction avoids it.
+     *
+     * This is also why serverless.yml overrides DB_HOST to Neon's direct
+     * (non-pooled) endpoint specifically for the "artisan" function, which is
+     * the one that runs migrations in production.
      */
     public $withinTransaction = false;
 

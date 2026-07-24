@@ -103,7 +103,7 @@ describe('useFontIdentification', () => {
     vi.stubGlobal('fetch', mockFetch)
     vi.spyOn(document, 'querySelector').mockReturnValue(null)
 
-    const { identifyFont } = useFontIdentification()
+    const { identifyFont, isProcessing } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
     const resizeStub = vi.fn().mockResolvedValue(image)
     const emitStub = vi.fn()
@@ -112,6 +112,7 @@ describe('useFontIdentification', () => {
 
     expect(result.success).toBe(false)
     expect(result.message).toContain('sesión')
+    expect(isProcessing.value).toBe(false)
     expect(mockFetch).not.toHaveBeenCalled()
   })
 

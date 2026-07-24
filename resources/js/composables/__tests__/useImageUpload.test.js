@@ -12,14 +12,20 @@ describe('useImageUpload', () => {
     expect(selectedImage.value).toBeNull()
   })
 
-  it('processFile accepts a PDF file', () => {
-    const { processFile, selectedImage, error } = useImageUpload()
+  it('processFile accepts a PDF file without generating a data URL preview', () => {
+    const readAsDataURLSpy = vi.spyOn(FileReader.prototype, 'readAsDataURL')
+    const { processFile, selectedImage, previewUrl, error, success } = useImageUpload()
 
     const pdfFile = new File(['fake-pdf'], 'document.pdf', { type: 'application/pdf' })
     processFile(pdfFile)
 
     expect(error.value).toBe('')
     expect(selectedImage.value.name).toBe(pdfFile.name)
+    expect(previewUrl.value).toBe('')
+    expect(success.value).toContain('Archivo cargado')
+    expect(readAsDataURLSpy).not.toHaveBeenCalled()
+
+    readAsDataURLSpy.mockRestore()
   })
 
   it('processFile validates file size (max 10MB)', () => {

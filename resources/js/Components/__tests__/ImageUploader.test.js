@@ -21,6 +21,7 @@ const state = {
 
 vi.mock('../../composables/useImageUpload', () => ({
   useImageUpload: () => state,
+  PDF_MIME_TYPE: 'application/pdf',
 }))
 
 vi.mock('../../composables/useFontIdentification', () => ({
@@ -59,7 +60,7 @@ describe('ImageUploader', () => {
     })
 
     expect(wrapper.text()).toContain('Sube tu imagen')
-    expect(wrapper.text()).toContain('Seleccionar imagen')
+    expect(wrapper.text()).toContain('Seleccionar archivo')
   })
 
   it('shows preview when image is selected', async () => {
