@@ -9,6 +9,7 @@ use App\Services\PdfFirstPageImageExtractor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -49,8 +50,13 @@ class FontController extends Controller
             try {
                 $fileToPersist = $file;
                 $imageReference = $fileToPersist->store('images/history', 'history-images');
-            } catch (\Throwable) {
-                // Mantener compatibilidad en caso de fallo al persistir imagen.
+            } catch (\Throwable $e) {
+                // Mantener compatibilidad en caso de fallo al persistir imagen:
+                // el historial se guarda igualmente, mostrando el nombre original.
+                Log::warning('Failed to persist history image', [
+                    'user_id' => Auth::id(),
+                    'message' => $e->getMessage(),
+                ]);
             }
 
             SearchHistory::create([

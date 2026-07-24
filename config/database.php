@@ -82,6 +82,8 @@ return [
             ]) : [],
         ],
 
+        // Kept in sync with "pgsql_direct" below (same options, different
+        // host) — if you add an option to one, add it to the other too.
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),

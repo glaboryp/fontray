@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 
+export const PDF_MIME_TYPE = 'application/pdf'
+
 export function useImageUpload() {
   const isDragging = ref(false)
   const selectedImage = ref(null)
@@ -11,7 +13,9 @@ export function useImageUpload() {
     error.value = ''
     success.value = ''
 
-    if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+    const isPdf = file.type === PDF_MIME_TYPE
+
+    if (!file.type.startsWith('image/') && !isPdf) {
       error.value = 'Por favor selecciona una imagen o un PDF válido.'
       return
     }
@@ -23,13 +27,20 @@ export function useImageUpload() {
 
     selectedImage.value = file
 
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      previewUrl.value = e.target.result
+    // A PDF can't be rendered as an <img>, so there's no point reading it
+    // into a data URL just to display a placeholder (see ImageUploader.vue).
+    if (!isPdf) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        previewUrl.value = e.target.result
+      }
+      reader.readAsDataURL(file)
     }
-    reader.readAsDataURL(file)
 
-    if (file.size > 2 * 1024 * 1024) {
+    if (isPdf) {
+      success.value =
+        'Archivo cargado correctamente. ¡Haz clic en "Identificar fuente" para continuar!'
+    } else if (file.size > 2 * 1024 * 1024) {
       success.value =
         'Imagen cargada correctamente. Nota: La imagen es grande y será redimensionada automáticamente para optimizar el proceso de identificación.'
     } else {
