@@ -13,7 +13,6 @@ export default [
       '.git/**',
       '**/*.min.js',
       'vite.config.js',
-      'tailwind.config.js',
       'composer.lock',
       'package-lock.json',
     ],
