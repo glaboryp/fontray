@@ -110,6 +110,7 @@ export default [
         Blob: 'readonly',
         File: 'readonly',
         Image: 'readonly',
+        HTMLCanvasElement: 'readonly',
         XMLHttpRequest: 'readonly',
         localStorage: 'readonly',
         sessionStorage: 'readonly',
