@@ -67,7 +67,7 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 
    ```bash
    ./vendor/bin/sail composer install
-   ./vendor/bin/sail npm install
+   ./vendor/bin/sail pnpm install
    ```
 
 5. **Ejecuta las migraciones**:
@@ -79,7 +79,7 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 6. **Compila los assets**:
 
    ```bash
-   ./vendor/bin/sail npm run dev
+   ./vendor/bin/sail pnpm run dev
    ```
 
 7. **Accede a la aplicación**:
@@ -100,8 +100,8 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
 # Ejecutar comandos Artisan
 ./vendor/bin/sail artisan [comando]
 
-# Ejecutar comandos NPM
-./vendor/bin/sail npm [comando]
+# Ejecutar comandos pnpm
+./vendor/bin/sail pnpm [comando]
 
 # Acceder a la base de datos
 ./vendor/bin/sail psql
@@ -180,12 +180,12 @@ Fontray ahora tiene 3 capas de tests:
 php artisan test
 
 # Frontend unit/component
-npm run test
+pnpm run test
 # o en watch mode
-npm run test:watch
+pnpm run test:watch
 
 # E2E
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 #### Opción B — Ejecutar tests con Sail
@@ -195,10 +195,10 @@ npm run test:e2e
 ./vendor/bin/sail artisan test
 
 # Frontend unit/component
-./vendor/bin/sail npm run test
+./vendor/bin/sail pnpm run test
 
 # E2E
-./vendor/bin/sail npm run test:e2e
+./vendor/bin/sail pnpm run test:e2e
 ```
 
 #### Comandos útiles de filtrado
@@ -208,10 +208,10 @@ npm run test:e2e
 php artisan test --filter=FontIdentificationServiceTest
 
 # Solo un archivo de Vitest
-npx vitest run resources/js/Pages/__tests__/ResultsPage.test.js
+pnpm exec vitest run resources/js/Pages/__tests__/ResultsPage.test.js
 
 # Solo un archivo E2E
-npx playwright test e2e/font-identification.spec.js
+pnpm exec playwright test e2e/font-identification.spec.js
 ```
 
 #### Nota sobre entorno para E2E

@@ -149,7 +149,7 @@ package:
     # Files and directories to exclude from deployment
     patterns:
         - '!.env' # Don't deploy local config
-        - '!public/hot' # Leftover from `npm run dev`; would break Vite asset resolution if present
+        - '!public/hot' # Leftover from `pnpm run dev`; would break Vite asset resolution if present
         - '!node_modules/**'
         - '!public/storage'
         - '!resources/assets/**'
