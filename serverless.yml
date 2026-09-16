@@ -1,4 +1,5 @@
 service: laravel
+frameworkVersion: '~4.42.0'
 
 # Set your team ID if you are using Bref Cloud (https://bref.sh/cloud)
 #bref:
