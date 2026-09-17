@@ -23,13 +23,14 @@ class PdfFirstPageImageExtractor
             // Imagick's own page-selector syntax ("path[0]") must be resolved by
             // Imagick itself: Intervention's file-path decoder rejects it outright
             // because is_file('path[0]') is always false, so we decode the first
-            // page via Imagick directly and hand the resulting object to Intervention.
+            // page via Imagick directly and hand the resulting blob to Intervention.
             $firstPage = new Imagick;
             $firstPage->readImage($pdf->getRealPath().'[0]');
+            $firstPage->setImageFormat('png');
 
             $manager = new ImageManager(new Driver);
-            $image = $manager->read($firstPage);
-            $image->toPng()->save($outputPath);
+            $image = $manager->decodeBinary($firstPage->getImageBlob());
+            $image->save($outputPath);
         } finally {
             @unlink($tempPath);
         }
