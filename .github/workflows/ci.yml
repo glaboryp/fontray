@@ -26,6 +26,26 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.4.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Feature tests render real Inertia pages via the @vite directive,
+      # which needs a built manifest — without this they fail with
+      # "Vite manifest not found", unrelated to whatever they're testing.
+      - name: Build frontend assets
+        run: pnpm run build
+
       - name: Run PHPUnit
         run: php artisan test
 
@@ -34,6 +54,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      # resources/js/app.js imports Ziggy's JS bridge straight out of the
+      # Composer vendor dir, so the build needs it present even though
+      # this job never runs PHPUnit.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, gd, pdo_pgsql, curl, zip, intl, bcmath
+          coverage: none
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
