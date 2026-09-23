@@ -17,11 +17,11 @@ vi.mock('vue-advanced-cropper', () => ({
         canvas.height = 100
         return {
           canvas,
-          coordinates: { width: 100, height: 100 }
+          coordinates: { width: 100, height: 100 },
         }
       },
-      rotate: vi.fn()
-    }
+      rotate: vi.fn(),
+    },
   },
 }))
 
@@ -44,7 +44,9 @@ describe('ImageCropper', () => {
       },
     })
 
-    const cancelButton = wrapper.findAll('button').find((b) => b.text().includes('Cancelar'))
+    const cancelButton = wrapper
+      .findAll('button')
+      .find(b => b.text().includes('Cancelar'))
     await cancelButton.trigger('click')
 
     expect(wrapper.emitted('cancelled')).toBeTruthy()
@@ -57,12 +59,14 @@ describe('ImageCropper', () => {
       },
     })
 
-    const rotateButton = wrapper.findAll('button').find((b) => b.text().includes('Rotar'))
+    const rotateButton = wrapper
+      .findAll('button')
+      .find(b => b.text().includes('Rotar'))
     expect(rotateButton).toBeDefined()
     expect(rotateButton.exists()).toBe(true)
 
     expect(wrapper.vm.rotation).toBe(0)
-    
+
     await rotateButton.trigger('click')
     expect(wrapper.vm.rotation).toBe(90)
   })
@@ -78,7 +82,7 @@ describe('ImageCropper', () => {
     expect(slider.exists()).toBe(true)
 
     expect(wrapper.vm.contrast).toBe(100)
-    
+
     await slider.setValue(150)
     expect(Number(wrapper.vm.contrast)).toBe(150)
   })
@@ -91,10 +95,12 @@ describe('ImageCropper - emit applied', () => {
         imageSrc: 'data:image/png;base64,abc',
       },
     })
-    
+
     // We mocked vue-advanced-cropper to return a valid canvas by default
     // so we just trigger click
-    const applyButton = wrapper.findAll('button').find((b) => b.text().includes('Aplicar recorte'))
+    const applyButton = wrapper
+      .findAll('button')
+      .find(b => b.text().includes('Aplicar recorte'))
     await applyButton.trigger('click')
 
     expect(wrapper.emitted('crop-applied')).toBeTruthy()

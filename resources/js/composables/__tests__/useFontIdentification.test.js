@@ -19,16 +19,22 @@ describe('useFontIdentification', () => {
 
     await identifyFont(image, resizeStub, emitStub)
 
-    expect(mockFetch).toHaveBeenCalledWith('/identify', expect.objectContaining({
-      method: 'POST',
-    }))
+    expect(mockFetch).toHaveBeenCalledWith(
+      '/identify',
+      expect.objectContaining({
+        method: 'POST',
+      })
+    )
   })
 
   it('identifyFont emits font-identified on success', async () => {
     const fonts = [{ name: 'Roboto' }]
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: true, fonts, total_found: 1 }),
-    }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: () => Promise.resolve({ success: true, fonts, total_found: 1 }),
+      })
+    )
 
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
@@ -44,9 +50,13 @@ describe('useFontIdentification', () => {
   })
 
   it('identifyFont returns error on failure', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: false, message: 'No text detected' }),
-    }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: () =>
+          Promise.resolve({ success: false, message: 'No text detected' }),
+      })
+    )
 
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
@@ -62,11 +72,14 @@ describe('useFontIdentification', () => {
 
   it('identifyFont sets isProcessing during request', async () => {
     let resolvePromise
-    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => {
-      return new Promise((resolve) => {
-        resolvePromise = resolve
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(() => {
+        return new Promise(resolve => {
+          resolvePromise = resolve
+        })
       })
-    }))
+    )
 
     const { identifyFont, isProcessing } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })
@@ -78,14 +91,19 @@ describe('useFontIdentification', () => {
     const promise = identifyFont(image, resizeStub, emitStub)
     await vi.waitFor(() => expect(isProcessing.value).toBe(true))
 
-    resolvePromise({ json: () => Promise.resolve({ success: true, fonts: [], total_found: 0 }) })
+    resolvePromise({
+      json: () => Promise.resolve({ success: true, fonts: [], total_found: 0 }),
+    })
     await promise
 
     expect(isProcessing.value).toBe(false)
   })
 
   it('identifyFont handles network error', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockRejectedValue(new Error('Network error'))
+    )
 
     const { identifyFont } = useFontIdentification()
     const image = new File(['img'], 'test.jpg', { type: 'image/jpeg' })

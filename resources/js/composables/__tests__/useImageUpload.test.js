@@ -14,9 +14,12 @@ describe('useImageUpload', () => {
 
   it('processFile accepts a PDF file without generating a data URL preview', () => {
     const readAsDataURLSpy = vi.spyOn(FileReader.prototype, 'readAsDataURL')
-    const { processFile, selectedImage, previewUrl, error, success } = useImageUpload()
+    const { processFile, selectedImage, previewUrl, error, success } =
+      useImageUpload()
 
-    const pdfFile = new File(['fake-pdf'], 'document.pdf', { type: 'application/pdf' })
+    const pdfFile = new File(['fake-pdf'], 'document.pdf', {
+      type: 'application/pdf',
+    })
     processFile(pdfFile)
 
     expect(error.value).toBe('')
@@ -31,7 +34,9 @@ describe('useImageUpload', () => {
   it('processFile validates file size (max 10MB)', () => {
     const { processFile, error, selectedImage } = useImageUpload()
 
-    const bigFile = new File([new ArrayBuffer(11 * 1024 * 1024)], 'big.jpg', { type: 'image/jpeg' })
+    const bigFile = new File([new ArrayBuffer(11 * 1024 * 1024)], 'big.jpg', {
+      type: 'image/jpeg',
+    })
     processFile(bigFile)
 
     expect(error.value).toContain('demasiado grande')
@@ -51,14 +56,23 @@ describe('useImageUpload', () => {
   it('processFile shows large file warning for >2MB', () => {
     const { processFile, success } = useImageUpload()
 
-    const bigFile = new File([new ArrayBuffer(3 * 1024 * 1024)], 'big.jpg', { type: 'image/jpeg' })
+    const bigFile = new File([new ArrayBuffer(3 * 1024 * 1024)], 'big.jpg', {
+      type: 'image/jpeg',
+    })
     processFile(bigFile)
 
     expect(success.value).toContain('redimensionada automáticamente')
   })
 
   it('removeImage resets state', () => {
-    const { processFile, removeImage, selectedImage, previewUrl, error, success } = useImageUpload()
+    const {
+      processFile,
+      removeImage,
+      selectedImage,
+      previewUrl,
+      error,
+      success,
+    } = useImageUpload()
 
     const file = new File(['fake'], 'photo.jpg', { type: 'image/jpeg' })
     processFile(file)

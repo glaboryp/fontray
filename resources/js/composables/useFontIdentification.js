@@ -9,12 +9,15 @@ export function useFontIdentification() {
     isProcessing.value = true
 
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+      const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute('content')
 
       if (!csrfToken) {
         return {
           success: false,
-          message: 'No se pudo verificar la sesión. Por favor, recarga la página e inténtalo de nuevo.',
+          message:
+            'No se pudo verificar la sesión. Por favor, recarga la página e inténtalo de nuevo.',
         }
       }
 
@@ -40,12 +43,16 @@ export function useFontIdentification() {
         })
         return { success: true, data }
       } else {
-        return { success: false, message: data.message || 'Error al procesar la imagen' }
+        return {
+          success: false,
+          message: data.message || 'Error al procesar la imagen',
+        }
       }
     } catch {
       return {
         success: false,
-        message: 'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.',
+        message:
+          'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.',
       }
     } finally {
       isProcessing.value = false

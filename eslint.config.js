@@ -49,7 +49,10 @@ export default [
       'comma-spacing': ['error', { before: false, after: true }],
 
       // Quotes consistentes
-      quotes: ['error', 'single'],
+      // avoidEscape: Prettier already switches to double quotes by itself
+      // when a string contains an apostrophe, to skip escaping it — without
+      // this option ESLint flags Prettier's own output as invalid.
+      quotes: ['error', 'single', { avoidEscape: true }],
 
       // Reglas específicas para Vue - ajustadas para compatibilidad con Prettier
       'vue/html-self-closing': [

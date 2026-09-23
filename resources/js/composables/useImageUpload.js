@@ -9,7 +9,7 @@ export function useImageUpload() {
   const error = ref('')
   const success = ref('')
 
-  const processFile = (file) => {
+  const processFile = file => {
     error.value = ''
     success.value = ''
 
@@ -31,7 +31,7 @@ export function useImageUpload() {
     // into a data URL just to display a placeholder (see ImageUploader.vue).
     if (!isPdf) {
       const reader = new FileReader()
-      reader.onload = (e) => {
+      reader.onload = e => {
         previewUrl.value = e.target.result
       }
       reader.readAsDataURL(file)
@@ -56,7 +56,7 @@ export function useImageUpload() {
     success.value = ''
   }
 
-  const handleDrop = (event) => {
+  const handleDrop = event => {
     event.preventDefault()
     isDragging.value = false
     const files = event.dataTransfer.files
@@ -65,14 +65,14 @@ export function useImageUpload() {
     }
   }
 
-  const handleFileSelect = (event) => {
+  const handleFileSelect = event => {
     const file = event.target.files[0]
     if (file) {
       processFile(file)
     }
   }
 
-  const formatFileSize = (bytes) => {
+  const formatFileSize = bytes => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
@@ -80,8 +80,13 @@ export function useImageUpload() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  const resizeImageIfNeeded = (file, maxWidth = 1200, maxHeight = 1200, quality = 0.8) => {
-    return new Promise((resolve) => {
+  const resizeImageIfNeeded = (
+    file,
+    maxWidth = 1200,
+    maxHeight = 1200,
+    quality = 0.8
+  ) => {
+    return new Promise(resolve => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       const img = new Image()
@@ -97,7 +102,7 @@ export function useImageUpload() {
         canvas.height = height
         ctx.drawImage(img, 0, 0, width, height)
         canvas.toBlob(
-          (blob) => {
+          blob => {
             const resizedFile = new File([blob], file.name, {
               type: file.type,
               lastModified: Date.now(),
