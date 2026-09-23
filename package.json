@@ -23,13 +23,13 @@
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/vite": "^4.3.3",
         "@vitejs/plugin-vue": "^6.0.9",
-        "@vue/test-utils": "^2.5.0",
+        "@vue/test-utils": "^2.5.1",
         "concurrently": "^10.0.5",
-        "eslint": "^10.10.0",
+        "eslint": "^10.11.0",
         "eslint-plugin-vue": "^10.11.0",
         "happy-dom": "^20.14.5",
         "laravel-vite-plugin": "^3.2.0",
-        "prettier": "^3.9.6",
+        "prettier": "^3.9.8",
         "serverless": "^4.42.0",
         "serverless-lift": "^1.37.7",
         "tailwindcss": "^4.3.3",
@@ -39,7 +39,7 @@
     "dependencies": {
         "@inertiajs/vue3": "^3.7.1",
         "axios": "^1.20.0",
-        "vue": "^3.5.42",
+        "vue": "^3.5.43",
         "vue-advanced-cropper": "^2.8.9"
     }
 }
