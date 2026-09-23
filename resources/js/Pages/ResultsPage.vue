@@ -1,39 +1,51 @@
 <template>
   <AppLayout>
-    <!-- Header Section -->
-    <div class="bg-gradient-to-br from-primary to-primary-dark py-12">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-          <h1 class="text-4xl font-bold text-white mb-4">
-            Resultados de Identificación
-          </h1>
-          <p class="text-xl text-primary-light">
-            Hemos encontrado {{ totalFonts }} fuentes similares
-          </p>
-        </div>
+    <!-- Header -->
+    <div class="bg-bench-950 border-b border-bench-800 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-3xl font-semibold text-bench-50 mb-2">
+          Resultados de la medición
+        </h1>
+        <p class="text-bench-400">
+          {{ totalFonts }} fuente(s) candidata(s), ordenadas por confianza
+        </p>
       </div>
     </div>
 
-    <!-- Results Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-12">
+      <div v-if="isLoading" class="text-center py-20">
         <div
-          class="inline-block animate-spin rounded-full h-32 w-32 border-b-2 border-primary"
+          class="inline-block animate-spin rounded-full h-10 w-10 border-2 border-bench-700 border-t-index-500"
         />
-        <p class="mt-4 text-lg text-gray-600">Cargando resultados...</p>
+        <p class="mt-4 text-bench-400">Cargando resultados…</p>
       </div>
 
       <!-- Error State -->
       <div v-else-if="hasError" class="text-center py-12">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-8">
-          <div class="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 class="text-2xl font-bold text-red-800 mb-4">
+        <div
+          class="texture-steel bg-bench-900 border border-bench-700 rounded-[var(--radius-panel)] p-8 max-w-lg mx-auto"
+        >
+          <svg
+            class="w-10 h-10 text-danger mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+            <path
+              d="M12 8v5M12 16h.01"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+          <h2 class="text-xl font-semibold text-bench-50 mb-3">
             Error al cargar resultados
           </h2>
-          <p class="text-red-600 mb-6">{{ errorMessage }}</p>
+          <p class="text-bench-300 mb-6">{{ errorMessage }}</p>
           <button
-            class="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+            class="bg-index-500 hover:bg-index-400 text-bench-950 px-6 py-2.5 rounded-[var(--radius-panel)] font-medium transition-colors cursor-pointer"
             @click="goBack"
           >
             Volver a intentar
@@ -43,17 +55,32 @@
 
       <!-- No Results State -->
       <div v-else-if="!hasFonts" class="text-center py-12">
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-8">
-          <div class="text-gray-400 text-6xl mb-4">🔍</div>
-          <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        <div
+          class="texture-steel bg-bench-900 border border-bench-700 rounded-[var(--radius-panel)] p-8 max-w-lg mx-auto"
+        >
+          <svg
+            class="w-10 h-10 text-bench-400 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" stroke-width="1.5" />
+            <path
+              d="M21 21l-4.3-4.3"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+          <h2 class="text-xl font-semibold text-bench-50 mb-3">
             No se encontraron fuentes
           </h2>
-          <p class="text-gray-600 mb-6">
+          <p class="text-bench-300 mb-6">
             No pudimos identificar fuentes en tu imagen. Intenta con una imagen
             más clara o con texto más legible.
           </p>
           <button
-            class="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+            class="bg-index-500 hover:bg-index-400 text-bench-950 px-6 py-2.5 rounded-[var(--radius-panel)] font-medium transition-colors cursor-pointer"
             @click="goBack"
           >
             Subir nueva imagen
@@ -65,14 +92,14 @@
       <div v-else>
         <!-- Action Bar -->
         <div
-          class="flex flex-col sm:flex-row justify-between items-center mb-8"
+          class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8"
         >
           <button
-            class="mb-4 sm:mb-0 flex items-center text-primary hover:text-primary-dark transition-colors cursor-pointer"
+            class="flex items-center gap-2 text-bench-300 hover:text-bench-50 transition-colors cursor-pointer text-sm"
             @click="goBack"
           >
             <svg
-              class="w-5 h-5 mr-2"
+              class="w-4 h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -80,94 +107,103 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="2"
+                stroke-width="1.5"
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
             Subir nueva imagen
           </button>
 
-          <div class="flex items-center space-x-4">
-            <span class="text-gray-600">{{ totalFonts }} resultados</span>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-mono text-bench-400">
+              {{ totalFonts }} resultados
+            </span>
             <select
               v-model="sortBy"
-              class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
+              class="bg-bench-900 border border-bench-600 rounded-[var(--radius-panel)] px-3 py-1.5 text-sm text-bench-100 focus:outline-none focus:border-index-500"
               @change="sortFonts"
             >
               <option value="name">Ordenar por nombre</option>
-              <option value="similarity">Ordenar por similitud</option>
+              <option value="similarity">Ordenar por confianza</option>
             </select>
           </div>
         </div>
 
         <!-- Fonts Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           <div
             v-for="(font, index) in sortedFonts"
             :key="index"
-            class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden"
+            class="bg-bench-900 rounded-[var(--radius-panel)] border border-bench-700 overflow-hidden flex flex-col"
           >
             <!-- Font Preview Image -->
-            <div class="aspect-w-16 aspect-h-9 bg-white">
+            <div class="bg-bench-950 border-b border-bench-800">
               <img
                 v-if="font.preview"
                 :src="font.preview"
                 :alt="font.name"
-                class="w-full h-48 object-contain"
+                class="w-full h-40 object-contain"
                 @error="handleImageError"
               />
-              <div
-                v-else
-                class="w-full h-48 bg-gray-200 flex items-center justify-center"
-              >
-                <div class="text-center text-gray-500">
-                  <div class="text-4xl mb-2">Aa</div>
-                  <div class="text-sm">Vista previa no disponible</div>
+              <div v-else class="w-full h-40 flex items-center justify-center">
+                <div class="text-center text-bench-300">
+                  <div class="text-3xl font-semibold mb-1">Aa</div>
+                  <div class="text-xs">Vista previa no disponible</div>
                 </div>
               </div>
             </div>
 
             <!-- Font Details -->
-            <div class="p-4">
-              <h3
-                class="font-bold text-lg text-gray-900 mb-2 truncate"
+            <div class="p-4 flex-1 flex flex-col">
+              <h2
+                class="font-semibold text-bench-50 mb-2 truncate"
                 :title="font.name"
               >
                 {{ font.name }}
-              </h3>
+              </h2>
 
-              <div class="space-y-2 text-sm text-gray-600">
-                <div v-if="font.category" class="flex items-center">
-                  <span class="font-medium">Categoría:</span>
-                  <span class="ml-2">{{ font.category }}</span>
+              <div class="space-y-1.5 text-sm text-bench-400 mb-3">
+                <div v-if="font.category" class="flex items-center gap-1.5">
+                  <span class="text-bench-300">Categoría:</span>
+                  <span>{{ font.category }}</span>
                 </div>
-
-                <div v-if="font.foundry" class="flex items-center">
-                  <span class="font-medium">Foundry:</span>
-                  <span class="ml-2">{{ font.foundry }}</span>
+                <div v-if="font.foundry" class="flex items-center gap-1.5">
+                  <span class="text-bench-300">Foundry:</span>
+                  <span>{{ font.foundry }}</span>
                 </div>
+              </div>
 
-                <div class="flex items-center">
-                  <span class="font-medium">Similitud:</span>
-                  <span class="ml-2">{{ font.similarity }}%</span>
+              <!-- Confidence readout -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs text-bench-300">Confianza</span>
+                  <span class="text-xs font-mono text-index-400">
+                    {{ font.similarity }}%
+                  </span>
+                </div>
+                <div class="h-1 bg-bench-800 rounded-full overflow-hidden">
+                  <div
+                    class="h-full bg-index-500 rounded-full"
+                    :style="{ width: `${font.similarity}%` }"
+                  />
                 </div>
               </div>
 
               <!-- Action Button -->
-              <div class="mt-4">
+              <div class="mt-auto">
                 <a
                   v-if="font.link"
                   :href="font.link"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="block w-full bg-primary hover:bg-primary-hover text-white text-center py-2 px-4 rounded-lg font-semibold transition-colors"
+                  class="block w-full bg-index-500 hover:bg-index-400 text-bench-950 text-center py-2 px-4 rounded-[var(--radius-panel)] font-medium transition-colors text-sm"
                 >
                   Ver en WhatFontIs
                 </a>
                 <button
                   v-else
                   disabled
-                  class="block w-full bg-gray-300 text-gray-500 text-center py-2 px-4 rounded-lg font-semibold cursor-not-allowed"
+                  class="block w-full bg-bench-800 text-bench-300 text-center py-2 px-4 rounded-[var(--radius-panel)] font-medium cursor-not-allowed text-sm"
                 >
                   Enlace no disponible
                 </button>
@@ -179,7 +215,7 @@
         <!-- Back to Top Button -->
         <div class="text-center mt-12">
           <button
-            class="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md cursor-pointer"
+            class="bg-transparent border border-bench-600 hover:border-bench-400 text-bench-200 px-6 py-2.5 rounded-[var(--radius-panel)] font-medium transition-colors cursor-pointer text-sm"
             @click="scrollToTop"
           >
             Volver arriba
@@ -284,7 +320,3 @@ onMounted(() => {
   loadResults()
 })
 </script>
-
-<style scoped>
-/* Estilos adicionales si son necesarios */
-</style>

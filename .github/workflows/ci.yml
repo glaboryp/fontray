@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, gd, pdo_pgsql, pdo_sqlite, sqlite3, curl, zip, intl, bcmath
+          coverage: none
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      # Ubuntu ships ImageMagick with the PDF coder locked down (a general
+      # security default, unrelated to us) and no Ghostscript at all, so
+      # Imagick can't rasterize a PDF's first page — the same PDF policy
+      # hardening the app's own Lambda layer needed in production.
+      - name: Allow Imagick to read PDFs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghostscript
+          for f in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
+            if [ -f "$f" ]; then
+              sudo sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' "$f"
+            fi
+          done
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.4.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Feature tests render real Inertia pages via the @vite directive,
+      # which needs a built manifest — without this they fail with
+      # "Vite manifest not found", unrelated to whatever they're testing.
+      - name: Build frontend assets
+        run: pnpm run build
+
+      - name: Run PHPUnit
+        run: php artisan test
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # resources/js/app.js imports Ziggy's JS bridge straight out of the
+      # Composer vendor dir, so the build needs it present even though
+      # this job never runs PHPUnit.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, gd, pdo_pgsql, curl, zip, intl, bcmath
+          coverage: none
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.4.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint:check
+
+      - name: Unit tests
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build

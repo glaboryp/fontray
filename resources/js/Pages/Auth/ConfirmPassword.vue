@@ -24,7 +24,7 @@ const submit = () => {
   <GuestLayout>
     <Head title="Confirmar contraseña" />
 
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    <div class="mb-4 text-sm text-bench-400">
       Esta es un área segura de la aplicación. Por favor, confirma tu contraseña
       antes de continuar.
     </div>

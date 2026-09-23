@@ -11,8 +11,8 @@ describe('Dashboard', () => {
     const wrapper = mount(Dashboard, {
       global: {
         stubs: {
-          AuthenticatedLayout: {
-            template: '<div><slot name="header"></slot><slot></slot></div>',
+          AppLayout: {
+            template: '<div><slot /></div>',
           },
         },
       },

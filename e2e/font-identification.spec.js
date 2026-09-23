@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test('full flow: upload image -> identify -> see results', async ({ page }) => {
   await page.goto('/')
 
-  await expect(page.locator('h1')).toContainText('Identifica cualquier')
+  await expect(page.locator('h1')).toContainText('Sube una imagen')
 
   const fileInput = page.locator('input[type="file"]')
   await fileInput.setInputFiles('tests/Fixtures/test_image.jpg')
@@ -16,7 +16,7 @@ test('full flow: upload image -> identify -> see results', async ({ page }) => {
   await identifyButton.click()
 
   await expect(
-    page.getByRole('heading', { name: /Resultados de Identificación/i })
+    page.getByRole('heading', { name: /Resultados de la medición/i })
   ).toBeVisible({ timeout: 15000 })
   await expect(page.getByText('Roboto Regular')).toBeVisible({ timeout: 15000 })
   await expect(page.getByText('Open Sans')).toBeVisible()
@@ -67,7 +67,7 @@ test('upload flow: upload image -> crop/rotate/contrast -> identify', async ({
   await expect(
     page.getByRole('heading', { name: /Recortar imagen/i })
   ).toBeHidden()
-  await expect(page.getByText(/Imagen recortada correctamente/i)).toBeVisible()
+  await expect(page.getByText(/Recorte aplicado/i)).toBeVisible()
 
   const identifyButton = page.getByRole('button', {
     name: /Identificar fuente/i,
@@ -75,7 +75,7 @@ test('upload flow: upload image -> crop/rotate/contrast -> identify', async ({
   await identifyButton.click()
 
   await expect(
-    page.getByRole('heading', { name: /Resultados de Identificación/i })
+    page.getByRole('heading', { name: /Resultados de la medición/i })
   ).toBeVisible({ timeout: 15000 })
 })
 
@@ -112,7 +112,7 @@ test('upload flow: upload PDF -> identify', async ({ page }) => {
   await identifyButton.click()
 
   await expect(
-    page.getByRole('heading', { name: /Resultados de Identificación/i })
+    page.getByRole('heading', { name: /Resultados de la medición/i })
   ).toBeVisible({ timeout: 15000 })
 })
 
@@ -136,6 +136,6 @@ test('navigation: examples/privacy/terms/home all load correctly', async ({
 
   await page.goto('/')
   await expect(
-    page.getByRole('heading', { name: /Identifica cualquier/i })
+    page.getByRole('heading', { name: /Sube una imagen/i })
   ).toBeVisible()
 })

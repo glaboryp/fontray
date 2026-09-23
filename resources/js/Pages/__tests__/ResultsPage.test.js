@@ -110,7 +110,7 @@ describe('ResultsPage', () => {
     const select = wrapper.find('select')
     await select.setValue('name')
 
-    const headings = wrapper.findAll('h3.font-bold')
+    const headings = wrapper.findAll('h2.font-semibold')
     expect(headings[0].text()).toBe('Alpha')
   })
 
@@ -149,7 +149,7 @@ describe('ResultsPage', () => {
     const select = wrapper.find('select')
     await select.setValue('similarity')
 
-    const headings = wrapper.findAll('h3.font-bold')
+    const headings = wrapper.findAll('h2.font-semibold')
     expect(headings[0].text()).toBe('B')
   })
 

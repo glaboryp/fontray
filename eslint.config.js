@@ -64,14 +64,6 @@ export default [
           math: 'always',
         },
       ],
-      'vue/max-attributes-per-line': [
-        'error',
-        {
-          singleline: { max: 3 },
-          multiline: { max: 1 },
-        },
-      ],
-      'vue/html-indent': ['error', 2],
       'vue/script-indent': ['error', 2, { baseIndent: 0 }],
       'vue/no-multi-spaces': 'error',
 
@@ -80,6 +72,11 @@ export default [
       'vue/html-closing-bracket-spacing': 'off',
       'vue/multiline-html-element-content-newline': 'off',
       'vue/singleline-html-element-content-newline': 'off',
+      // Prettier decide cuándo partir atributos/indentar el HTML; estas dos
+      // reglas usaban un criterio distinto (p.ej. en SVG con varios atributos)
+      // y peleaban con el propio formateo de Prettier.
+      'vue/max-attributes-per-line': 'off',
+      'vue/html-indent': 'off',
 
       // Reglas de formateo que maneja Prettier
       'space-before-function-paren': 'off',
