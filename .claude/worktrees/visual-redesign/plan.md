@@ -116,7 +116,16 @@ corrige en un solo batch — sin loops de pulido infinito.
   - [x] `PrivacyPage` / `TermsPage` — rediseñadas a fondo: panel `texture-steel` con secciones separadas por líneas finas, fecha como valor medido en mono, ancho de lectura ~70ch
   - [x] Revisión final combinada del lote (ResultsPage/ExamplesPage/Dashboard/HistoryDashboard/Auth) — finish-reviewer: **ship**
 - [x] Tokens `--color-primary-*` legacy eliminados de `app.css` (sin consumidores)
-- [ ] Fase 3 — Cierre restante: correr `pnpm run test:e2e` de verdad (esta sesión no tiene `php` disponible), decidir sobre el conflicto ESLint↔Prettier preexistente (no tocado)
+- [x] Fase 3 — Cierre: `pnpm run test:e2e` corrido de verdad dentro de Sail, 9/9 en verde; conflicto ESLint↔Prettier arreglado (`vue/max-attributes-per-line`/`vue/html-indent` desactivadas, `lint:check` limpio en todo el repo)
+- [x] CI (`backend` + `frontend`) añadido y en verde; `main` protegida (PR obligatoria + checks obligatorios, incluso para admins)
+- [x] PR #25 mergeada a `main` (2026-09-23) y desplegada a producción sin fallos
+
+## Pendiente / cosas menores sin cerrar
+
+- `pnpm run format:check` sigue fallando en 6 ficheros **preexistentes**, no tocados en este rediseño (`useFontIdentification.js`, `useImageUpload.js`, sus tests, `ImageCropper.test.js`, `Dashboard.test.js`). No bloquea CI (no se incluyó `format:check` como gate). Arreglo trivial (`pnpm run format`) si se quiere en algún momento.
+- Rama `feat/visual-redesign` sigue existiendo en local y en remoto tras el merge — pendiente de borrar.
+- Quedan dos usuarios de prueba en la base de datos del contenedor Sail local (`qa-review@example.com` / `password123` con historial sembrado, y `QA Tester`) — solo local, no afecta a producción.
+- El contenedor Sail (`localhost:8080`) sigue levantado en esta máquina.
 
 ## Notas finales de la Fase 2 (batch Results/Dashboard/History/Examples/Auth)
 
