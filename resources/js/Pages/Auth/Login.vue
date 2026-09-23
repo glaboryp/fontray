@@ -39,7 +39,7 @@ const submit = () => {
   <GuestLayout>
     <Head title="Iniciar sesión" />
 
-    <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+    <div v-if="status" class="mb-4 text-sm font-medium text-confirm">
       {{ status }}
     </div>
 
@@ -78,7 +78,7 @@ const submit = () => {
       <div class="mt-4 block">
         <label class="flex items-center">
           <Checkbox v-model:checked="form.remember" name="remember" />
-          <span class="ms-2 text-sm text-gray-600">Recordarme</span>
+          <span class="ms-2 text-sm text-bench-400">Recordarme</span>
         </label>
       </div>
 
@@ -86,7 +86,7 @@ const submit = () => {
         <Link
           v-if="canResetPassword"
           :href="route('password.request')"
-          class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          class="rounded-md text-sm text-bench-400 underline hover:text-bench-100 focus:outline-none focus:ring-2 focus:ring-index-500 focus:ring-offset-2 focus:ring-offset-bench-900"
         >
           ¿Olvidaste tu contraseña?
         </Link>
@@ -101,12 +101,12 @@ const submit = () => {
       </div>
 
       <div
-        class="mt-6 text-center text-sm text-gray-600 border-t border-gray-200 pt-4"
+        class="mt-6 text-center text-sm text-bench-400 border-t border-bench-700 pt-4"
       >
         ¿No tienes cuenta?
         <Link
           :href="route('register')"
-          class="font-medium text-primary hover:text-primary-dark underline"
+          class="font-medium text-index-400 hover:text-index-300 underline"
         >
           Crear cuenta
         </Link>

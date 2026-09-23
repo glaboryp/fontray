@@ -11,13 +11,13 @@ vi.mock('@inertiajs/vue3', () => ({
 }))
 
 describe('HomePage', () => {
-  it('renders all sections (hero, upload, how-it-works, faq)', () => {
+  it('renders all sections (hero, usage guide, how-it-works, faq)', () => {
     const wrapper = mount(HomePage, {
       global: {
         stubs: {
           AppLayout: { template: '<div data-test="layout"><slot /></div>' },
           HeroSection: { template: '<div data-test="hero" />' },
-          UploadSection: { template: '<div data-test="upload" />' },
+          UsageGuideSection: { template: '<div data-test="guide" />' },
           HowItWorksSection: { template: '<div data-test="how" />' },
           FaqSection: { template: '<div data-test="faq" />' },
         },
@@ -26,7 +26,7 @@ describe('HomePage', () => {
 
     expect(wrapper.find('[data-test="layout"]').exists()).toBe(true)
     expect(wrapper.find('[data-test="hero"]').exists()).toBe(true)
-    expect(wrapper.find('[data-test="upload"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="guide"]').exists()).toBe(true)
     expect(wrapper.find('[data-test="how"]').exists()).toBe(true)
     expect(wrapper.find('[data-test="faq"]').exists()).toBe(true)
   })

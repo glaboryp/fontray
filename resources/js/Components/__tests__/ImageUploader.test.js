@@ -16,7 +16,9 @@ const state = {
   handleDrop: vi.fn(),
   handleFileSelect: vi.fn(),
   formatFileSize: vi.fn().mockReturnValue('10 KB'),
-  resizeImageIfNeeded: vi.fn().mockResolvedValue(new File(['x'], 'x.jpg', { type: 'image/jpeg' })),
+  resizeImageIfNeeded: vi
+    .fn()
+    .mockResolvedValue(new File(['x'], 'x.jpg', { type: 'image/jpeg' })),
 }
 
 vi.mock('../../composables/useImageUpload', () => ({
@@ -59,7 +61,7 @@ describe('ImageUploader', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Sube tu imagen')
+    expect(wrapper.text()).toContain('Suelta tu imagen')
     expect(wrapper.text()).toContain('Seleccionar archivo')
   })
 
@@ -94,11 +96,17 @@ describe('ImageUploader', () => {
 
     await nextTick()
 
-    expect(wrapper.text()).toContain('Por favor selecciona un archivo de imagen válido.')
+    expect(wrapper.text()).toContain(
+      'Por favor selecciona un archivo de imagen válido.'
+    )
   })
 
   it('shows a PDF placeholder instead of an image preview and hides the crop button', async () => {
-    state.selectedImage.value = { name: 'document.pdf', size: 10000, type: 'application/pdf' }
+    state.selectedImage.value = {
+      name: 'document.pdf',
+      size: 10000,
+      type: 'application/pdf',
+    }
     state.previewUrl.value = 'data:application/pdf;base64,mock'
 
     const wrapper = mount(ImageUploader, {
@@ -114,7 +122,11 @@ describe('ImageUploader', () => {
     expect(wrapper.find('img[alt="Imagen seleccionada"]').exists()).toBe(false)
     expect(wrapper.text()).toContain('PDF seleccionado')
     expect(wrapper.text()).toContain('document.pdf')
-    expect(wrapper.findAll('button').find((btn) => btn.text().includes('Recortar imagen'))).toBeFalsy()
+    expect(
+      wrapper
+        .findAll('button')
+        .find(btn => btn.text().includes('Recortar imagen'))
+    ).toBeFalsy()
   })
 
   it('calls identifyFont when button clicked', async () => {
@@ -131,7 +143,9 @@ describe('ImageUploader', () => {
 
     await nextTick()
 
-    const identifyButton = wrapper.findAll('button').find((btn) => btn.text().includes('Identificar fuente'))
+    const identifyButton = wrapper
+      .findAll('button')
+      .find(btn => btn.text().includes('Identificar fuente'))
     expect(identifyButton).toBeTruthy()
 
     await identifyButton.trigger('click')

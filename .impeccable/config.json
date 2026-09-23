@@ -1,0 +1,44 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "resources/js/Pages/ExamplesPage.vue"
+        ],
+        "createdAt": "2026-09-23T12:29:54.490Z",
+        "reason": "intentional: this is the 'ejemplos a evitar' (bad examples) section, showcasing gradient-clipped text as a documented anti-pattern the app itself warns against — not real UI chrome"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "resources/js/Pages/ExamplesPage.vue"
+        ],
+        "createdAt": "2026-09-23T12:33:40.691Z",
+        "reason": "intentional: same 'ejemplos a evitar' bad-example gradient text as gradient-text — documenting an anti-pattern, not real UI chrome"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "resources/js/Pages/ExamplesPage.vue"
+        ],
+        "createdAt": "2026-09-23T12:35:59.176Z",
+        "reason": "intentional: decorative rounded pill shapes illustrating 'letters as abstract decorative forms' in the bad-examples section — not real UI card nesting, just colored shapes with no content or hierarchy"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "resources/js/Pages/ResultsPage.vue"
+        ],
+        "createdAt": "2026-09-23T12:39:53.357Z",
+        "reason": "same accepted pattern as HomePage reticle+button and ExamplesPage preview panels: a bordered result card with a differently-tinted preview region on top and caption below is a standard two-tone card layout, not literal nested cards (no borders/shadows on the inner region)"
+      }
+    ]
+  }
+}

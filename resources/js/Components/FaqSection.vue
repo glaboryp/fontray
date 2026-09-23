@@ -1,24 +1,46 @@
 <template>
-  <section class="py-20 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
-          Preguntas frecuentes
-        </h2>
-      </div>
+  <section class="py-16 md:py-20 bg-bench-950">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-semibold text-bench-50 mb-8">
+        Preguntas frecuentes
+      </h2>
 
-      <div class="space-y-8">
+      <div class="border-t border-bench-800">
         <div
           v-for="faq in faqs"
           :key="faq.id"
-          class="border-b border-gray-200 pb-8"
+          class="border-b border-bench-800"
         >
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">
-            {{ faq.question }}
-          </h3>
-          <p class="text-gray-600">
+          <button
+            class="w-full flex items-center justify-between gap-4 py-5 text-left cursor-pointer"
+            :aria-expanded="openId === faq.id"
+            @click="toggle(faq.id)"
+          >
+            <span class="text-base font-medium text-bench-100">
+              {{ faq.question }}
+            </span>
+            <svg
+              class="w-4 h-4 text-bench-400 shrink-0 transition-transform duration-200"
+              :class="{ 'rotate-45': openId === faq.id }"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </button>
+          <div
+            v-show="openId === faq.id"
+            class="pb-5 pr-8 text-sm text-bench-400 leading-relaxed"
+          >
             {{ faq.answer }}
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -28,25 +50,36 @@
 <script setup>
 import { ref } from 'vue'
 
-// Data
 const faqs = ref([
   {
     id: 1,
     question: '¿Qué tipos de imagen funcionan mejor?',
     answer:
-      'Las imágenes con texto claro, de alta resolución y buen contraste funcionan mejor. Evita imágenes borrosas o con texto muy pequeño.',
+      'Las imágenes con texto claro, de alta resolución y buen contraste dan las lecturas más precisas. Evita imágenes borrosas o con texto muy pequeño.',
   },
   {
     id: 2,
-    question: '¿Es completamente gratuito?',
+    question: '¿Es gratuito?',
     answer:
-      'Sí, Fontray es completamente gratuito. No necesitas registrarte ni pagar nada para identificar fuentes.',
+      'Sí, Fontray es gratuito. No necesitas registrarte para identificar una fuente; crear una cuenta solo te permite guardar tu historial de búsquedas.',
   },
   {
     id: 3,
-    question: '¿Qué tan preciso es el sistema?',
+    question: '¿Qué pasa con las imágenes que subo?',
     answer:
-      'Nuestro sistema tiene una alta precisión, especialmente con fuentes populares. Siempre proporcionamos varias opciones para que puedas elegir la mejor coincidencia.',
+      'Se usan únicamente para la medición y no se almacenan de forma permanente en nuestros sistemas.',
+  },
+  {
+    id: 4,
+    question: '¿Qué tan preciso es el resultado?',
+    answer:
+      'La precisión es alta con fuentes populares. Siempre se devuelven varias coincidencias ordenadas por confianza, para que puedas elegir la más adecuada.',
   },
 ])
+
+const openId = ref(1)
+
+const toggle = id => {
+  openId.value = openId.value === id ? null : id
+}
 </script>

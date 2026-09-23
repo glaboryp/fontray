@@ -1,31 +1,25 @@
 <script setup>
 defineOptions({ name: 'AppDashboard' })
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head } from '@inertiajs/vue3'
 </script>
 
 <template>
   <Head title="Dashboard" />
 
-  <AuthenticatedLayout>
-    <template #header>
-      <h2
-        class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-      >
-        Dashboard
-      </h2>
-    </template>
-
-    <div class="py-12">
-      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div
-          class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
-        >
-          <div class="p-6 text-gray-900 dark:text-gray-100">
-            You're logged in!
-          </div>
-        </div>
+  <AppLayout>
+    <div class="bg-bench-950 border-b border-bench-800 py-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-2xl font-semibold text-bench-50">Dashboard</h1>
       </div>
     </div>
-  </AuthenticatedLayout>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div
+        class="bg-bench-900 border border-bench-700 rounded-[var(--radius-panel)] p-6 text-bench-200"
+      >
+        You're logged in!
+      </div>
+    </div>
+  </AppLayout>
 </template>

@@ -1,31 +1,51 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-50">
+  <div class="min-h-screen flex flex-col bg-bench-900 text-bench-100">
     <!-- Header/Navigation -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
+    <header class="texture-steel bg-bench-950 border-b border-bench-700">
       <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
       >
-        <!-- Logo -->
-        <div class="flex-shrink-0 flex items-center">
-          <Link href="/" class="flex items-center">
-            <img
-              src="/images/logo_letras.png"
-              alt="Fontray"
-              class="h-16 w-auto"
+        <Link href="/" class="flex items-center gap-2.5 shrink-0">
+          <svg
+            class="w-7 h-7 text-index-500"
+            viewBox="0 0 28 28"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="14"
+              cy="14"
+              r="10.5"
+              stroke="currentColor"
+              stroke-width="1.5"
             />
-          </Link>
-        </div>
+            <path
+              d="M14 3.5v3M14 21.5v3M24.5 14h-3M6.5 14h-3"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+            <circle cx="14" cy="14" r="2.75" fill="currentColor" />
+          </svg>
+          <span class="font-semibold text-lg tracking-tight text-bench-50">
+            Fontray
+          </span>
+        </Link>
 
         <!-- Auth Navigation -->
-        <nav class="flex items-center space-x-4">
+        <nav class="flex items-center gap-4">
           <template v-if="$page.props.auth?.user">
             <div class="hidden sm:flex sm:items-center">
-              <Dropdown align="right" width="48">
+              <Dropdown
+                align="right"
+                width="48"
+                content-classes="py-1 bg-bench-800 border border-bench-600"
+              >
                 <template #trigger>
                   <span class="inline-flex rounded-md">
                     <button
                       type="button"
-                      class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 transition duration-150 ease-in-out hover:text-primary focus:outline-none"
+                      class="inline-flex items-center rounded-md border border-transparent px-3 py-2 text-sm font-medium leading-4 text-bench-200 transition duration-150 ease-in-out hover:text-index-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-index-500 focus-visible:ring-offset-2 focus-visible:ring-offset-bench-950"
                     >
                       {{ $page.props.auth.user.name }}
 
@@ -62,9 +82,9 @@
 
             <div class="flex items-center sm:hidden">
               <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                class="inline-flex items-center justify-center p-2 rounded-md text-bench-400 hover:text-bench-100 hover:bg-bench-800 focus:outline-none transition duration-150 ease-in-out"
                 :aria-expanded="showingNavigationDropdown"
-                aria-label="Toggle navigation menu"
+                aria-label="Abrir menú de navegación"
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
               >
                 <svg
@@ -80,7 +100,7 @@
                     }"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
+                    stroke-width="1.5"
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                   <path
@@ -90,7 +110,7 @@
                     }"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
+                    stroke-width="1.5"
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
@@ -99,16 +119,16 @@
           </template>
           <template v-else>
             <!-- Desktop Links -->
-            <div class="hidden sm:flex items-center space-x-4">
+            <div class="hidden sm:flex items-center gap-4">
               <Link
                 :href="route('login')"
-                class="text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                class="text-sm font-medium text-bench-300 hover:text-bench-50 transition-colors"
               >
                 Iniciar sesión
               </Link>
               <Link
                 :href="route('register')"
-                class="text-sm font-medium bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors shadow-sm"
+                class="text-sm font-medium bg-index-500 text-bench-950 px-4 py-2 rounded-[var(--radius-panel)] hover:bg-index-400 transition-colors"
               >
                 Crear cuenta
               </Link>
@@ -117,9 +137,9 @@
             <!-- Mobile Hamburger Menu Button -->
             <div class="flex items-center sm:hidden">
               <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                class="inline-flex items-center justify-center p-2 rounded-md text-bench-400 hover:text-bench-100 hover:bg-bench-800 focus:outline-none transition duration-150 ease-in-out"
                 :aria-expanded="showingNavigationDropdown"
-                aria-label="Toggle navigation menu"
+                aria-label="Abrir menú de navegación"
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
               >
                 <svg
@@ -135,7 +155,7 @@
                     }"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
+                    stroke-width="1.5"
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                   <path
@@ -145,7 +165,7 @@
                     }"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
+                    stroke-width="1.5"
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
@@ -162,15 +182,15 @@
           block: showingNavigationDropdown,
           hidden: !showingNavigationDropdown,
         }"
-        class="sm:hidden border-t border-gray-200"
+        class="sm:hidden border-t border-bench-700"
       >
         <div class="pt-2 pb-3 space-y-1">
-          <div class="px-4 py-2 text-sm font-semibold text-gray-700">
+          <div class="px-4 py-2 text-sm font-semibold text-bench-200">
             {{ $page.props.auth.user.name }}
           </div>
           <Link
             :href="route('history')"
-            class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out"
+            class="block pl-4 pr-4 py-2 text-base font-medium text-bench-300 hover:text-bench-50 hover:bg-bench-800 transition duration-150 ease-in-out"
             @click="showingNavigationDropdown = false"
           >
             Historial de búsquedas
@@ -179,7 +199,7 @@
             :href="route('logout')"
             method="post"
             as="button"
-            class="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out"
+            class="block w-full text-left pl-4 pr-4 py-2 text-base font-medium text-bench-300 hover:text-bench-50 hover:bg-bench-800 transition duration-150 ease-in-out"
             @click="showingNavigationDropdown = false"
           >
             Cerrar sesión
@@ -194,19 +214,19 @@
           block: showingNavigationDropdown,
           hidden: !showingNavigationDropdown,
         }"
-        class="sm:hidden border-t border-gray-200"
+        class="sm:hidden border-t border-bench-700"
       >
         <div class="pt-2 pb-3 space-y-1">
           <Link
             :href="route('login')"
-            class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out"
+            class="block pl-4 pr-4 py-2 text-base font-medium text-bench-300 hover:text-bench-50 hover:bg-bench-800 transition duration-150 ease-in-out"
             @click="showingNavigationDropdown = false"
           >
             Iniciar sesión
           </Link>
           <Link
             :href="route('register')"
-            class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-primary hover:text-primary-dark hover:bg-gray-50 transition duration-150 ease-in-out"
+            class="block pl-4 pr-4 py-2 text-base font-medium text-index-400 hover:text-index-300 hover:bg-bench-800 transition duration-150 ease-in-out"
             @click="showingNavigationDropdown = false"
           >
             Crear cuenta
@@ -221,65 +241,68 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-auto">
+    <footer
+      class="texture-steel bg-bench-950 border-t border-bench-700 mt-auto"
+    >
       <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <div class="flex items-center mb-4 md:mb-0">
-            <img src="/images/logo.png" alt="Fontray" class="h-6 w-auto mr-2" />
-            <span class="text-lg font-semibold text-gray-900">Fontray</span>
+        <div
+          class="flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <div class="flex items-center gap-2">
+            <svg
+              class="w-5 h-5 text-index-500"
+              viewBox="0 0 28 28"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="14"
+                cy="14"
+                r="10.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <circle cx="14" cy="14" r="2.75" fill="currentColor" />
+            </svg>
+            <span class="text-base font-semibold text-bench-50">Fontray</span>
           </div>
 
-          <div class="flex flex-col items-center space-y-3">
-            <div
-              class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6"
-            >
+          <div class="flex flex-col items-center gap-3">
+            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6">
               <Link
                 href="/examples"
-                class="text-sm text-gray-600 hover:text-primary transition-colors"
+                class="text-sm text-bench-300 hover:text-index-400 transition-colors"
               >
-                Ejemplos y Guía
+                Ejemplos y guía
               </Link>
               <Link
                 href="/privacy"
-                class="text-sm text-gray-600 hover:text-primary transition-colors"
+                class="text-sm text-bench-300 hover:text-index-400 transition-colors"
               >
-                Política de Privacidad
+                Política de privacidad
               </Link>
               <Link
                 href="/terms"
-                class="text-sm text-gray-600 hover:text-primary transition-colors"
+                class="text-sm text-bench-300 hover:text-index-400 transition-colors"
               >
-                Términos de Servicio
+                Términos de servicio
               </Link>
-              <span class="text-sm text-gray-500">
-                © {{ currentYear }} Fontray. Todos los derechos reservados.
+              <span class="text-sm text-bench-400 font-mono">
+                © {{ currentYear }} Fontray
               </span>
             </div>
 
             <!-- Powered by WhatFontIs -->
-            <div class="flex items-center space-x-1 text-xs text-gray-500">
-              <span>Powered by</span>
+            <div class="flex items-center gap-1.5 text-xs text-bench-400">
+              <span>Motor de identificación:</span>
               <a
                 href="https://www.whatfontis.com/API-identify-fonts-from-image.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-primary hover:text-primary-dark transition-colors font-medium"
+                class="text-index-400 hover:text-index-300 transition-colors font-medium"
               >
                 WhatFontIs
               </a>
-              <svg
-                class="w-3 h-3 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
             </div>
           </div>
         </div>
@@ -289,13 +312,15 @@
     <!-- Loading overlay -->
     <div
       v-if="$page.props.loading"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-bench-950/80 flex items-center justify-center z-50"
     >
-      <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+      <div
+        class="bg-bench-800 border border-bench-600 rounded-[var(--radius-panel)] p-6 flex items-center gap-3"
+      >
         <div
-          class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"
+          class="animate-spin rounded-full h-6 w-6 border-2 border-bench-600 border-t-index-500"
         />
-        <span class="text-gray-700">Cargando...</span>
+        <span class="text-bench-100 text-sm">Cargando…</span>
       </div>
     </div>
   </div>

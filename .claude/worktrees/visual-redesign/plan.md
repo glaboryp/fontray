@@ -105,7 +105,31 @@ corrige en un solo batch — sin loops de pulido infinito.
 
 ## Estado
 
-- [ ] Fase 0 — Preparación
-- [ ] Fase 1 — Dirección visual
+- [x] Fase 0 — Preparación (rama `feat/visual-redesign` creada, `PRODUCT.md` capturado vía `impeccable init`)
+- [x] Fase 1 — Dirección visual: elegida "Calibration Bench" (panel de instrumento de precisión), contrato guardado en `.impeccable/surfaces/resources-js-pages-homepage-vue.md`
 - [ ] Fase 2 — Construcción por superficie
-- [ ] Fase 3 — Cierre
+  - [x] HomePage (Hero+retícula, UsageGuide, HowItWorks, FAQ) + AppLayout (chrome compartido) — construido, revisado (finish-reviewer: ship) y documentado en `DESIGN.md`
+  - [x] `ResultsPage` — migrada (confianza como barra + mono readout, sin gradiente azul)
+  - [x] `Dashboard` + `HistoryDashboard` — migradas; `AuthenticatedLayout.vue`/`NavLink.vue`/`ResponsiveNavLink.vue`/`ApplicationLogo.vue` retirados (sin más consumidores, `Dashboard` ahora usa `AppLayout`)
+  - [x] `ExamplesPage` — migrada
+  - [x] Páginas de Auth (`GuestLayout` + Login/Register/ForgotPassword/ResetPassword/ConfirmPassword/VerifyEmail + TextInput/InputLabel/InputError/Checkbox/PrimaryButton/SecondaryButton) — migradas
+  - [x] `PrivacyPage` / `TermsPage` — rediseñadas a fondo: panel `texture-steel` con secciones separadas por líneas finas, fecha como valor medido en mono, ancho de lectura ~70ch
+  - [x] Revisión final combinada del lote (ResultsPage/ExamplesPage/Dashboard/HistoryDashboard/Auth) — finish-reviewer: **ship**
+- [x] Tokens `--color-primary-*` legacy eliminados de `app.css` (sin consumidores)
+- [ ] Fase 3 — Cierre restante: correr `pnpm run test:e2e` de verdad (esta sesión no tiene `php` disponible), decidir sobre el conflicto ESLint↔Prettier preexistente (no tocado)
+
+## Notas finales de la Fase 2 (batch Results/Dashboard/History/Examples/Auth)
+
+- Migración completa a "Calibration Bench" en: `ResultsPage`, `Dashboard`, `HistoryDashboard`, `ExamplesPage`, `GuestLayout` + las 6 páginas de `Auth` + componentes de formulario compartidos.
+- Retirados por quedar sin uso: `AuthenticatedLayout.vue`, `NavLink.vue`, `ResponsiveNavLink.vue`, `ApplicationLogo.vue` (Dashboard ahora usa `AppLayout`, igual que el resto de la app).
+- Bugs de contraste WCAG AA reales encontrados y corregidos en esta ronda (no solo en páginas nuevas, también en `ImageUploader.vue` ya enviado): token `--color-danger` reajustado (`#d3534b`→`#d7625b`), estado deshabilitado unificado a `bench-800`/`bench-300` en toda la app.
+- Dos usuarios de prueba quedan en la base de datos local de Sail (`qa-review@example.com` / `password123`, con 3 registros de historial sembrados, y un `QA Tester` de un registro anterior) — datos de desarrollo inofensivos, no se han limpiado.
+- `DESIGN.md` y `.impeccable/design.json` actualizados para reflejar el estado real (ya no dicen que faltan páginas por migrar).
+
+## Notas de la Fase 2 — HomePage
+
+- Mundo "Calibration Bench" construido: tokens en `resources/css/app.css` (paleta grafito/acero + acento ámbar "index", fuentes Archivo/JetBrains Mono autohospedadas en `public/fonts/`, textura `.texture-steel` en `public/images/textures/brushed-steel.webp`).
+- Favicon (`public/images/logo.png`) sustituido por la nueva marca; `ApplicationLogo.vue`/`logo_letras.png` (Auth) se migran en su propia fase.
+- Tokens `--color-primary-*` siguen definidos a propósito para no romper páginas aún no migradas — no tocar hasta que estén todas migradas.
+- Conflicto preexistente ESLint↔Prettier en el repo (reglas `vue/max-attributes-per-line` y `vue/html-indent` vs. el formateo real de Prettier): afecta también a ficheros no tocados en esta sesión (`Dashboard.test.js`, composables). No se ha intentado arreglar la config, fuera de alcance de este rediseño.
+- No se pudo ejecutar la suite E2E de Playwright en esta sesión (no hay `php` en este shell); sí se actualizaron los textos esperados en `e2e/font-identification.spec.js` y `e2e/smoke.spec.js` para el nuevo copy. Pendiente: correr `pnpm run test:e2e` para confirmarlo.

@@ -5,10 +5,10 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 <template>
   <AppLayout>
     <div
-      class="flex flex-col items-center pt-6 sm:justify-center sm:pt-12 pb-12"
+      class="bg-bench-950 flex flex-col items-center pt-6 sm:justify-center sm:pt-12 pb-12 min-h-[70vh]"
     >
       <div
-        class="mt-6 w-full overflow-hidden bg-white px-6 py-8 shadow-sm sm:max-w-md sm:rounded-lg border border-gray-200"
+        class="texture-steel mt-6 w-full overflow-hidden bg-bench-900 px-6 py-8 sm:max-w-md rounded-[var(--radius-panel)] border border-bench-700"
       >
         <slot />
       </div>

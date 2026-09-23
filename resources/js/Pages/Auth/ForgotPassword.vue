@@ -29,13 +29,13 @@ const submit = () => {
   <GuestLayout>
     <Head title="Recuperar contraseña" />
 
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="mb-4 text-sm text-bench-400">
       ¿Olvidaste tu contraseña? No hay problema. Solo dinos tu dirección de
       correo electrónico y te enviaremos un enlace para restablecer tu
       contraseña.
     </div>
 
-    <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+    <div v-if="status" class="mb-4 text-sm font-medium text-confirm">
       {{ status }}
     </div>
 
@@ -59,7 +59,7 @@ const submit = () => {
       <div class="mt-4 flex items-center justify-between">
         <Link
           :href="route('login')"
-          class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          class="rounded-md text-sm text-bench-400 underline hover:text-bench-100 focus:outline-none focus:ring-2 focus:ring-index-500 focus:ring-offset-2 focus:ring-offset-bench-900"
         >
           Volver a iniciar sesión
         </Link>

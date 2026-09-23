@@ -1,49 +1,34 @@
 <template>
-  <section class="bg-gradient-to-br from-primary-light via-white to-cyan-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <div class="text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-          Identifica cualquier
-          <span class="text-primary">fuente</span>
-          al instante
-        </h1>
-        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          Sube una imagen con texto y descubre qué fuente tipográfica se está
-          utilizando. Rápido, preciso y completamente gratuito.
-        </p>
-
-        <!-- CTA Button -->
-        <div class="mb-12">
-          <button
-            class="bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg hover:shadow-xl cursor-pointer"
-            @click="$emit('scrollToUploader')"
+  <section class="bg-bench-900 border-b border-bench-800">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 md:pt-20 md:pb-20"
+    >
+      <div
+        class="grid lg:grid-cols-[minmax(0,22rem)_1fr] gap-10 lg:gap-16 items-center"
+      >
+        <div>
+          <h1
+            class="text-3xl md:text-4xl font-semibold tracking-tight text-bench-50 mb-4 leading-tight"
           >
-            Comenzar ahora
-            <svg
-              class="inline-block ml-2 w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-              />
-            </svg>
-          </button>
+            Sube una imagen. Lee la fuente exacta.
+          </h1>
+          <p class="text-base text-bench-300 leading-relaxed max-w-md">
+            Fontray mide tipografías en fotos, capturas y PDFs, y devuelve
+            coincidencias ordenadas por confianza, sin guardar tus archivos.
+          </p>
         </div>
 
-        <FeaturesGrid />
+        <ImageUploader
+          @uploaded="$emit('imageUploaded', $event)"
+          @font-identified="$emit('fontIdentified', $event)"
+        />
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import FeaturesGrid from './FeaturesGrid.vue'
+import ImageUploader from './ImageUploader.vue'
 
-// Emits
-defineEmits(['scrollToUploader'])
+defineEmits(['imageUploaded', 'fontIdentified'])
 </script>

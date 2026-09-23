@@ -60,29 +60,29 @@ const openHistoryResult = item => {
   <Head title="Historial de búsquedas" />
 
   <AppLayout>
-    <div class="py-12 bg-gray-50 min-h-full">
+    <div class="py-12 bg-bench-950 min-h-full">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-gray-900">
+          <h1 class="text-2xl font-semibold text-bench-50">
             Historial de búsquedas
           </h1>
         </div>
         <div>
           <div
             v-if="hasHistory"
-            class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            class="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
           >
             <div
               v-for="item in histories.data"
               :key="item.id"
-              class="overflow-hidden bg-white shadow-sm sm:rounded-lg flex flex-col cursor-pointer hover:shadow-md transition-shadow"
+              class="overflow-hidden bg-bench-900 border border-bench-700 rounded-[var(--radius-panel)] flex flex-col cursor-pointer hover:border-bench-500 transition-colors"
               role="button"
               tabindex="0"
               @click="openHistoryResult(item)"
               @keyup.enter="openHistoryResult(item)"
             >
               <div
-                class="h-48 w-full bg-gray-50 flex items-center justify-center overflow-hidden p-4 border-b border-gray-100"
+                class="h-40 w-full bg-bench-950 flex items-center justify-center overflow-hidden p-4 border-b border-bench-800"
               >
                 <img
                   v-if="item.image_url"
@@ -90,16 +90,14 @@ const openHistoryResult = item => {
                   alt="Imagen de búsqueda"
                   class="object-contain w-full h-full"
                 />
-                <span v-else class="text-gray-400">Sin imagen</span>
+                <span v-else class="text-bench-300 text-sm">Sin imagen</span>
               </div>
-              <div
-                class="p-4 text-gray-900 flex-1 flex flex-col justify-between"
-              >
+              <div class="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 class="font-bold text-lg mb-1">
+                  <h3 class="font-semibold text-bench-50 mb-1">
                     {{ getTotalFound(item.font_results) }} fuentes encontradas
                   </h3>
-                  <p class="text-sm text-gray-500">
+                  <p class="text-sm font-mono text-bench-300">
                     {{ formatDate(item.created_at) }}
                   </p>
                 </div>
@@ -107,23 +105,26 @@ const openHistoryResult = item => {
             </div>
           </div>
 
-          <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">No hay búsquedas registradas.</div>
+          <div
+            v-else
+            class="bg-bench-900 border border-bench-700 rounded-[var(--radius-panel)] overflow-hidden"
+          >
+            <div class="p-6 text-bench-300">No hay búsquedas registradas.</div>
           </div>
 
           <!-- Pagination Links -->
           <div
             v-if="histories.links && histories.links.length > 3"
-            class="mt-8 flex justify-center space-x-2"
+            class="mt-8 flex justify-center gap-2"
           >
             <template v-for="(link, key) in histories.links" :key="key">
               <Link
                 v-if="link.url"
                 :href="link.url"
-                class="px-4 py-2 border rounded text-sm"
+                class="px-4 py-2 border rounded-[var(--radius-panel)] text-sm"
                 :class="{
-                  'bg-indigo-600 text-white border-indigo-600': link.active,
-                  'bg-white text-gray-700 border-gray-300 hover:bg-gray-50':
+                  'bg-index-500 text-bench-950 border-index-500': link.active,
+                  'bg-transparent text-bench-300 border-bench-600 hover:border-bench-400':
                     !link.active,
                 }"
               >
@@ -133,7 +134,7 @@ const openHistoryResult = item => {
               <!-- eslint-disable vue/no-v-html -->
               <span
                 v-else
-                class="px-4 py-2 border rounded text-sm bg-gray-100 text-gray-400 border-gray-200"
+                class="px-4 py-2 border rounded-[var(--radius-panel)] text-sm bg-bench-900 text-bench-600 border-bench-800"
                 v-html="link.label"
               />
               <!-- eslint-enable vue/no-v-html -->
