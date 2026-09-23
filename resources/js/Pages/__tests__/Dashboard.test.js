@@ -17,7 +17,7 @@ describe('Dashboard', () => {
         },
       },
     })
-    expect(wrapper.text()).toContain('You\'re logged in')
+    expect(wrapper.text()).toContain("You're logged in")
     expect(wrapper.text()).toContain('Dashboard')
   })
 })
