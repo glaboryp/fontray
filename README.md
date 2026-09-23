@@ -83,7 +83,13 @@ Fontray es una herramienta que permite a los usuarios identificar fuentes tipogr
    ```
 
 7. **Accede a la aplicación**:
-   Abre tu navegador en `http://localhost`
+   Abre tu navegador en `http://localhost:8080` (puerto definido por `APP_PORT` en tu `.env`).
+
+   > **Nota**: usamos `APP_PORT=8080` en vez del 80 por defecto para evitar
+   > choques con otros proyectos Docker que también reclaman el puerto 80.
+   > Si tienes un `http://localhost/` que no muestra Fontray, revisa el valor
+   > de `APP_PORT` en tu `.env` y entra por ese puerto. Si 8080 también está
+   > ocupado en tu máquina, cambia `APP_PORT` a otro valor libre.
 
 ### Comandos Útiles
 
