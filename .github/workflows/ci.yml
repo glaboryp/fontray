@@ -26,6 +26,20 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist
 
+      # Ubuntu ships ImageMagick with the PDF coder locked down (a general
+      # security default, unrelated to us) and no Ghostscript at all, so
+      # Imagick can't rasterize a PDF's first page — the same PDF policy
+      # hardening the app's own Lambda layer needed in production.
+      - name: Allow Imagick to read PDFs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghostscript
+          for f in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
+            if [ -f "$f" ]; then
+              sudo sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' "$f"
+            fi
+          done
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
