@@ -3,6 +3,4 @@ allowBuilds:
   serverless: true
 overrides:
   "js-beautify>glob": "^14.0.2"
-auditConfig:
-  ignoreGhsas:
-    - GHSA-g3hv-75wg-m249
+  "editorconfig>minimatch": "^11.0.1"
